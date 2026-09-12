@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%B1%3C/text%3E%3C/svg%3E">
+<title>Early Years Baseline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@500;600;700;800&display=swap">
+<style>
+  :root{
+    --paper:#FBFAF7;
+    --paper-raised:#FFFFFF;
+    --paper-sunk:#F3ECE4;
+    --ink:#3A1216;
+    --ink-soft:#8C6F63;
+    --line:rgba(58,18,22,.15);
+    --accent:#4A151B;
+    --accent-strong:#320D11;
+    --accent-ink:#FFF8F1;
+    --accent-2:#C9971F;
+    --accent-2-strong:#A87A12;
+    --focus:#A87A12;
+    --shadow-1:0 1px 2px rgba(43,36,32,.07);
+    --shadow-2:0 10px 28px -14px rgba(43,36,32,.35);
+    --band-emerging-bg:#EFE7D4; --band-emerging-fg:#7C6A3F; --band-emerging-line:#D9CBA3;
+    --band-developing-bg:#F0D6AC; --band-developing-fg:#8A5A19; --band-developing-line:#DDAF63;
+    --band-meets-bg:#CFE0BD; --band-meets-fg:#3E6A2F; --band-meets-line:#A8C98C;
+    --band-exceeding-bg:#B7D9C3; --band-exceeding-fg:#1F5A3C; --band-exceeding-line:#7FB597;
+    --band-none-bg:#EDE7DC; --band-none-fg:#8A8072; --band-none-line:#D9D0C0;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#221C17;
+      --paper-raised:#2B241D;
+      --paper-sunk:#1B1611;
+      --ink:#F3EBDD;
+      --ink-soft:#B8AB97;
+      --line:rgba(243,235,221,.14);
+      --accent:#E08A5F;
+      --accent-strong:#F2A87E;
+      --accent-ink:#2A1A10;
+      --accent-2:#5FB39B;
+      --accent-2-strong:#7ECAB4;
+      --focus:#7ECAB4;
+      --shadow-1:0 1px 2px rgba(0,0,0,.4);
+      --shadow-2:0 14px 32px -16px rgba(0,0,0,.6);
+      --band-emerging-bg:#3A331F; --band-emerging-fg:#D8C68C; --band-emerging-line:#5A4E2C;
+      --band-developing-bg:#4A3417; --band-developing-fg:#EAB878; --band-developing-line:#6E4D22;
+      --band-meets-bg:#2C3D21; --band-meets-fg:#B7DE9C; --band-meets-line:#41582F;
+      --band-exceeding-bg:#1C3B2A; --band-exceeding-fg:#8FDCB0; --band-exceeding-line:#2C5940;
+      --band-none-bg:#332C23; --band-none-fg:#B8AB97; --band-none-line:#463C30;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1C1010;
+    --paper-raised:#241515;
+    --paper-sunk:#170D0D;
+    --ink:#F3E9E1;
+    --ink-soft:#C9A99A;
+    --line:rgba(243,233,225,.14);
+    --accent:#C24B4F;
+    --accent-strong:#D96569;
+    --accent-ink:#2A1010;
+    --accent-2:#E0B23A;
+    --accent-2-strong:#F0C763;
+    --focus:#E0B23A;
+    --shadow-1:0 1px 2px rgba(0,0,0,.4);
+    --shadow-2:0 14px 32px -16px rgba(0,0,0,.6);
+    --band-emerging-bg:#3A331F; --band-emerging-fg:#D8C68C; --band-emerging-line:#5A4E2C;
+    --band-developing-bg:#4A3417; --band-developing-fg:#EAB878; --band-developing-line:#6E4D22;
+    --band-meets-bg:#2C3D21; --band-meets-fg:#B7DE9C; --band-meets-line:#41582F;
+    --band-exceeding-bg:#1C3B2A; --band-exceeding-fg:#8FDCB0; --band-exceeding-line:#2C5940;
+    --band-none-bg:#332C23; --band-none-fg:#B8AB97; --band-none-line:#463C30;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:"Fraunces",Georgia,serif; text-wrap:balance; margin:0; }
+  p{ margin:0; }
+  button{ font-family:inherit; }
+  :focus-visible{ outline:2.5px solid var(--focus); outline-offset:2px; border-radius:6px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  .app{ max-width:900px; margin:0 auto; padding:20px 20px 64px; }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:14px 4px 22px; border-bottom:1px solid var(--line); margin-bottom:26px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; cursor:pointer; background:none; border:none; padding:0; color:inherit; }
+  .brand svg{ width:30px; height:30px; flex:none; }
+  .brand-text{ display:flex; flex-direction:column; align-items:flex-start; line-height:1.15; }
+  .brand-text b{ font-family:"Fraunces",serif; font-size:1.18rem; font-weight:600; }
+  .brand-text span{ font-size:.72rem; color:var(--ink-soft); letter-spacing:.03em; }
+  .topbar-meta{ display:flex; align-items:center; gap:14px; font-size:.85rem; color:var(--ink-soft); }
+  .timer{ font-variant-numeric:tabular-nums; font-weight:700; color:var(--ink); background:var(--paper-sunk); padding:5px 11px; border-radius:100px; border:1px solid var(--line); }
+  .end-link{ background:none; border:none; color:var(--accent-strong); font-weight:700; font-size:.85rem; cursor:pointer; padding:4px 2px; }
+  .end-link:hover{ text-decoration:underline; }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-weight:700; font-size:.95rem; padding:12px 20px; border-radius:11px;
+    border:1px solid transparent; cursor:pointer; transition:transform .12s ease, background .15s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:hover{ background:var(--accent-strong); }
+  .btn-primary:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+  .btn-ghost:hover{ background:var(--paper-sunk); }
+  .btn-quiet{ background:none; border:none; color:var(--ink-soft); font-weight:600; font-size:.88rem; cursor:pointer; padding:8px 4px; }
+  .btn-quiet:hover{ color:var(--ink); }
+  .btn-sm{ padding:8px 14px; font-size:.85rem; border-radius:9px; }
+  @media (prefers-reduced-motion:no-preference){ .btn{ transition:transform .12s ease, background .15s ease; } }
+  @media (prefers-reduced-motion:reduce){ .btn{ transition:none; } }
+
+  /* ---------- cards / surfaces ---------- */
+  .card{ background:var(--paper-raised); border:1px solid var(--line); border-radius:16px; padding:26px; box-shadow:var(--shadow-1); }
+  .eyebrow{ font-size:.72rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); }
+
+  /* ---------- roster view ---------- */
+  .hero-row{ display:flex; justify-content:space-between; align-items:flex-end; gap:18px; margin-bottom:22px; flex-wrap:wrap; }
+  .hero-row h1{ font-size:clamp(1.6rem,1.3rem+1.4vw,2.05rem); }
+  .hero-sub{ color:var(--ink-soft); margin-top:6px; max-width:52ch; font-size:.98rem; line-height:1.5; }
+  .hero-actions{ display:flex; gap:10px; }
+  .legend{ display:flex; flex-wrap:wrap; gap:8px 18px; margin:18px 0 26px; font-size:.85rem; color:var(--ink-soft); }
+  .legend b{ color:var(--ink); }
+  .legend-item{ display:flex; align-items:center; gap:6px; }
+  .swatch{ width:11px; height:11px; border-radius:3px; flex:none; }
+
+  .roster-list{ display:flex; flex-direction:column; gap:10px; }
+  .roster-row{
+    display:grid; grid-template-columns:1fr auto auto auto; align-items:center; gap:16px;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:13px; padding:14px 18px;
+    cursor:pointer; text-align:left; width:100%;
+  }
+  .roster-row:hover{ border-color:var(--accent-2); }
+  .roster-name{ font-weight:700; font-size:1.02rem; }
+  .roster-meta{ font-size:.8rem; color:var(--ink-soft); margin-top:2px; }
+  .roster-mini{ display:flex; gap:3px; }
+  .roster-mini i{ display:block; width:7px; height:18px; border-radius:2px; background:var(--paper-sunk); }
+  .empty-state{ text-align:center; padding:52px 20px; color:var(--ink-soft); border:1.5px dashed var(--line); border-radius:16px; }
+  .empty-state svg{ width:40px; height:40px; margin-bottom:10px; opacity:.6; }
+
+  /* ---------- band chip ---------- */
+  .band-chip{
+    display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:700;
+    padding:5px 12px; border-radius:100px; border:1px solid; white-space:nowrap;
+  }
+  .band-Emerging{ background:var(--band-emerging-bg); color:var(--band-emerging-fg); border-color:var(--band-emerging-line); }
+  .band-Developing{ background:var(--band-developing-bg); color:var(--band-developing-fg); border-color:var(--band-developing-line); }
+  .band-Meets{ background:var(--band-meets-bg); color:var(--band-meets-fg); border-color:var(--band-meets-line); }
+  .band-Exceeding{ background:var(--band-exceeding-bg); color:var(--band-exceeding-fg); border-color:var(--band-exceeding-line); }
+  .band-None{ background:var(--band-none-bg); color:var(--band-none-fg); border-color:var(--band-none-line); }
+
+  /* ---------- setup form ---------- */
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.full{ grid-column:1/-1; }
+  .field label{ font-size:.8rem; font-weight:700; color:var(--ink-soft); }
+  .field input, .field textarea, .field select{
+    font:inherit; font-size:.98rem; padding:11px 13px; border-radius:10px; border:1.5px solid var(--line);
+    background:var(--paper-sunk); color:var(--ink);
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--accent-2); outline:none; }
+  .field textarea{ resize:vertical; min-height:64px; font-family:inherit; }
+  .setup-note{ display:flex; gap:10px; align-items:flex-start; background:var(--paper-sunk); border-radius:12px; padding:14px 16px; margin-top:22px; font-size:.88rem; color:var(--ink-soft); line-height:1.5; }
+  .setup-note svg{ flex:none; width:19px; height:19px; margin-top:1px; color:var(--accent-2); }
+
+  /* ---------- assessment progress ---------- */
+  .progress-track{ height:7px; border-radius:100px; background:var(--paper-sunk); overflow:hidden; margin-bottom:22px; }
+  .progress-fill{ height:100%; background:var(--accent-2); border-radius:100px; transition:width .3s ease; }
+  .section-tag{ display:flex; align-items:center; gap:10px; margin-bottom:6px; color:var(--accent-2); }
+  .section-tag svg{ width:22px; height:22px; }
+  .section-tag span{ font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+
+  /* ---------- domain intro ---------- */
+  .intro-grid{ display:grid; grid-template-columns:96px 1fr; gap:22px; align-items:start; }
+  .intro-icon{ width:96px; height:96px; border-radius:20px; background:var(--paper-sunk); display:flex; align-items:center; justify-content:center; color:var(--accent-2); }
+  .intro-icon svg{ width:46px; height:46px; }
+  .intro-grid h2{ font-size:1.5rem; margin-bottom:8px; }
+  .say-block{ background:var(--paper-sunk); border-left:3px solid var(--accent); border-radius:0 10px 10px 0; padding:12px 15px; margin:14px 0; font-size:.98rem; line-height:1.55; }
+  .say-block b{ color:var(--accent-strong); }
+  .materials-line{ display:flex; gap:8px; align-items:center; font-size:.86rem; color:var(--ink-soft); margin-top:10px; }
+
+  /* ---------- item stage ---------- */
+  .prompt{ font-family:"Figtree"; font-weight:700; font-size:1.28rem; line-height:1.4; margin-bottom:18px; }
+  .prompt .say-cue{ display:block; font-size:.74rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px; }
+  .visual-block{ margin:0 0 20px; display:flex; justify-content:center; }
+  .count-group{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; font-size:1.9rem; }
+  .option-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:14px; }
+  .option-grid.opts-2{ grid-template-columns:1fr 1fr; }
+  .opt-tile{
+    background:var(--paper-sunk); border:2px solid var(--line); border-radius:14px; padding:18px 12px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:108px;
+    cursor:pointer; font-size:1rem; font-weight:700; text-align:center;
+  }
+  .opt-tile:hover{ border-color:var(--accent-2); }
+  .opt-tile .glyph{ font-family:"Fraunces"; font-size:2.3rem; font-weight:600; line-height:1; }
+  .opt-tile.chosen-correct{ border-color:var(--band-meets-line); background:var(--band-meets-bg); color:var(--band-meets-fg); }
+  .opt-tile.chosen-wrong{ border-color:var(--band-developing-line); background:var(--band-developing-bg); color:var(--band-developing-fg); }
+  .opt-tile.reveal-correct{ border-color:var(--band-meets-line); box-shadow:0 0 0 2px var(--band-meets-line) inset; }
+  .opt-tile[disabled], .opt-tile.is-locked{ cursor:default; }
+  .opt-mark{ font-size:.78rem; font-weight:800; }
+
+  .rate-grid{ display:flex; flex-direction:column; gap:10px; max-width:460px; }
+  .rate-opt{
+    background:var(--paper-sunk); border:2px solid var(--line); border-radius:12px; padding:14px 18px;
+    text-align:left; font-weight:700; font-size:.98rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+  }
+  .rate-opt:hover{ border-color:var(--accent-2); }
+  .rate-opt.chosen{ border-color:var(--accent-2); background:var(--band-meets-bg); color:var(--band-meets-fg); }
+
+  .obs-field{ margin-bottom:20px; }
+  .obs-field .field-label{ font-size:.8rem; font-weight:700; color:var(--ink-soft); display:block; margin-bottom:8px; }
+  .chip-group{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip-btn{ padding:9px 16px; border-radius:100px; border:1.5px solid var(--line); background:var(--paper-sunk); font-weight:700; font-size:.85rem; color:var(--ink); cursor:pointer; }
+  .chip-btn:hover{ border-color:var(--accent-2); }
+  .chip-btn.active{ background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-ink); }
+  .info-chip{ display:inline-flex; align-items:center; padding:5px 12px; border-radius:100px; background:var(--paper-sunk); border:1px solid var(--line); font-size:.8rem; font-weight:700; color:var(--ink-soft); }
+
+  .order-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:16px; margin-bottom:8px; }
+  .order-card{
+    position:relative; background:var(--paper-sunk); border:2px solid var(--line); border-radius:14px;
+    padding:22px 10px 14px; text-align:center; cursor:pointer; font-weight:700; font-size:.92rem;
+  }
+  .order-card .emoji{ font-size:2.4rem; display:block; margin-bottom:8px; }
+  .order-card .badge{
+    position:absolute; top:-10px; left:-10px; width:28px; height:28px; border-radius:100px; background:var(--accent);
+    color:var(--accent-ink); font-family:"Fraunces"; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+  }
+  .order-card.placed{ border-color:var(--accent-2); }
+  .order-hint{ font-size:.85rem; color:var(--ink-soft); margin-top:6px; }
+
+  .feedback-row{ display:flex; align-items:center; gap:8px; margin-top:16px; font-size:.9rem; font-weight:700; min-height:24px; }
+  .feedback-row.ok{ color:var(--band-meets-fg); }
+  .feedback-row.no{ color:var(--band-developing-fg); }
+
+  .stage-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; padding-top:18px; border-top:1px solid var(--line); }
+  .stage-footer .left-controls{ display:flex; gap:14px; align-items:center; }
+
+  /* ---------- phonics grid ---------- */
+  .phon-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin:6px 0 8px; }
+  .phon-tile{
+    aspect-ratio:1; border-radius:12px; border:2px solid var(--line); background:var(--paper-sunk);
+    display:flex; align-items:center; justify-content:center; font-family:"Fraunces"; font-weight:600; font-size:1.5rem;
+    cursor:pointer; position:relative; user-select:none;
+  }
+  .phon-tile.wide{ font-size:1.15rem; }
+  .phon-tile.correct{ border-color:var(--band-meets-line); background:var(--band-meets-bg); color:var(--band-meets-fg); }
+  .phon-tile.incorrect{ border-color:var(--band-developing-line); background:var(--band-developing-bg); color:var(--band-developing-fg); }
+  .phon-tile .dot{ position:absolute; bottom:6px; right:6px; width:8px; height:8px; border-radius:100px; }
+  .phon-tile.correct .dot{ background:var(--band-meets-fg); }
+  .phon-tile.incorrect .dot{ background:var(--band-developing-fg); }
+  .phon-summary{ display:flex; gap:22px; margin:16px 0 4px; font-size:.9rem; color:var(--ink-soft); }
+  .phon-summary b{ color:var(--ink); font-variant-numeric:tabular-nums; }
+
+  /* ---------- report ---------- */
+  .report-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; margin-bottom:24px; }
+  .report-overall{ display:flex; align-items:center; gap:16px; }
+  .overall-badge{ display:flex; flex-direction:column; align-items:center; justify-content:center; width:92px; height:92px; border-radius:100px; border:3px solid; font-family:"Fraunces"; }
+  .overall-badge .pct{ font-size:1.5rem; font-weight:700; line-height:1; }
+  .overall-badge .lbl{ font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-top:2px; }
+  .domain-report{ display:flex; flex-direction:column; gap:12px; }
+  .domain-report-row{ display:grid; grid-template-columns:34px 1fr auto; align-items:center; gap:14px; padding:12px 4px; border-bottom:1px solid var(--line); }
+  .domain-report-row:last-child{ border-bottom:none; }
+  .domain-report-row svg{ width:22px; height:22px; color:var(--accent-2); }
+  .dr-bar-track{ height:9px; background:var(--paper-sunk); border-radius:100px; overflow:hidden; margin-top:6px; }
+  .dr-bar-fill{ height:100%; border-radius:100px; }
+  .dr-name{ font-weight:700; font-size:.95rem; }
+  .dr-detail{ font-size:.78rem; color:var(--ink-soft); margin-top:2px; }
+  .report-actions{ display:flex; gap:10px; margin-top:28px; flex-wrap:wrap; }
+  .print-only{ display:none; }
+
+  .csv-overlay{ position:fixed; inset:0; background:rgba(20,16,12,.55); display:flex; align-items:center; justify-content:center; padding:24px; z-index:50; }
+  .csv-box{ background:var(--paper-raised); border-radius:16px; padding:24px; max-width:640px; width:100%; box-shadow:var(--shadow-2); }
+  .csv-box textarea{ width:100%; height:220px; font-family:ui-monospace,monospace; font-size:.78rem; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--paper-sunk); color:var(--ink); }
+
+  @media (max-width:640px){
+    .form-grid{ grid-template-columns:1fr; }
+    .intro-grid{ grid-template-columns:64px 1fr; }
+    .intro-icon{ width:64px; height:64px; border-radius:16px; }
+    .intro-icon svg{ width:32px; height:32px; }
+    .phon-grid{ grid-template-columns:repeat(4,1fr); }
+    .roster-row{ grid-template-columns:1fr auto; }
+    .roster-row .roster-mini, .roster-row .roster-date-col{ display:none; }
+  }
+
+  @media print{
+    body{ background:#fff; }
+    .topbar, .stage-footer, .report-actions, .btn, .end-link{ display:none !important; }
+    .app{ max-width:none; padding:0; }
+    .card{ box-shadow:none; border:none; padding:0; }
+    .print-only{ display:block; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================== ICONS ============================== */
+  const ICON = {
+    sprout: `<svg viewBox="0 0 32 32" fill="none"><path d="M16 29V15" stroke="var(--accent-2)" stroke-width="2.4" stroke-linecap="round"/><path d="M16 17c0-6 5-9 10-9 0 6-3 10-10 9Z" fill="var(--accent-2)"/><path d="M16 20c0-5-4.5-8-9-8 0 5.5 3.5 9 9 8Z" fill="var(--accent)"/></svg>`,
+    numbers: `<svg viewBox="0 0 24 24"><rect x="4" y="14" width="3.4" height="7" rx="1" style="fill:currentColor"/><rect x="10.3" y="9" width="3.4" height="12" rx="1" style="fill:currentColor"/><rect x="16.6" y="4" width="3.4" height="17" rx="1" style="fill:currentColor"/></svg>`,
+    shapes: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="6"/><polygon points="17,7 22,17 12,17"/></svg>`,
+    maths: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v10M7 12h10" stroke-linecap="round"/></svg>`,
+    spatial: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="4" width="12" height="9" rx="1.4"/><circle cx="18" cy="18" r="2.6" style="fill:currentColor;stroke:none"/></svg>`,
+    sequence: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="9" width="5" height="5" rx="1"/><rect x="10" y="9" width="5" height="5" rx="1" stroke-dasharray="1.6 1.6"/><path d="M17 11.5h4.2M18.6 9.5l2.4 2-2.4 2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    story: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="9" height="12" rx="1.4"/><rect x="12.5" y="4" width="9" height="12" rx="1.4"/></svg>`,
+    literacy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3.5" width="16" height="17" rx="1.6"/><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h6" stroke-linecap="round"/></svg>`,
+    phonics: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 14.5V16a2 2 0 0 0 2 2h2l3.2 3v-3H18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5.5a2 2 0 0 0-2 2Z"/><path d="M7.5 12c.7-.9 1.9-.9 2.6 0M13 10.3c1.3-1.6 3.4-1.6 4.7 0" stroke-linecap="round"/></svg>`,
+    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    cross: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>`,
+    info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 8v.01" stroke-linecap="round"/></svg>`,
+    empty: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v6" stroke-linecap="round"/></svg>`,
+    printer: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V4h12v5M6 18h12v-5H6v5ZM4 9h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-2M4 16H2a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h1" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    download: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 18v1.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V18" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  };
+
+  /* ============================== HELPERS ============================== */
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+  function shapeSVG(kind){
+    const c = 'viewBox="0 0 72 72" width="64" height="64" aria-hidden="true"';
+    if(kind==='circle') return `<svg ${c}><circle cx="36" cy="36" r="27" style="fill:var(--accent)"/></svg>`;
+    if(kind==='square') return `<svg ${c}><rect x="11" y="11" width="50" height="50" rx="5" style="fill:var(--accent-2)"/></svg>`;
+    if(kind==='triangle') return `<svg ${c}><polygon points="36,9 64,59 8,59" style="fill:var(--accent)"/></svg>`;
+    if(kind==='rectangle') return `<svg ${c}><rect x="5" y="20" width="62" height="32" rx="5" style="fill:var(--accent-2)"/></svg>`;
+    if(kind==='star') return `<svg ${c}><polygon points="36,6 44,27 67,27 48,41 55,64 36,51 17,64 24,41 5,27 28,27" style="fill:var(--ink-soft)"/></svg>`;
+    if(kind==='oval') return `<svg ${c}><ellipse cx="36" cy="36" rx="30" ry="19" style="fill:var(--ink-soft)"/></svg>`;
+    return "";
+  }
+
+  function scene(kind){
+    const c = 'viewBox="0 0 120 92" width="112" height="86" aria-hidden="true"';
+    const boxStyle = 'fill:none;stroke:var(--ink);stroke-width:3.2';
+    const ballStyle = 'fill:var(--accent)';
+    const box = (x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" style="${boxStyle}"/>`;
+    const ball = (cx,cy,r)=>`<circle cx="${cx}" cy="${cy}" r="${r}" style="${ballStyle}"/>`;
+    if(kind==='on') return `<svg ${c}>${box(35,26,50,34)}${ball(60,17,10)}</svg>`;
+    if(kind==='under') return `<svg ${c}>${ball(60,70,10)}${box(35,15,50,34)}</svg>`;
+    if(kind==='next-to') return `<svg ${c}>${box(20,26,42,34)}${ball(94,43,10)}</svg>`;
+    if(kind==='in') return `<svg ${c}>${box(35,20,50,44)}${ball(60,42,9)}</svg>`;
+    if(kind==='between') return `<svg ${c}>${box(6,26,26,34)}${box(88,26,26,34)}${ball(60,43,9)}</svg>`;
+    if(kind==='beside-a') return `<svg ${c}>${box(6,26,26,34)}${box(88,26,26,34)}${ball(4,43,9)}</svg>`;
+    if(kind==='beside-b') return `<svg ${c}>${box(6,26,26,34)}${box(88,26,26,34)}${ball(116,43,9)}</svg>`;
+    return "";
+  }
+
+  function countGroup(emoji,n){
+    return `<div class="count-group">${Array.from({length:n}).map(()=>`<span>${emoji}</span>`).join("")}</div>`;
+  }
+
+  function dotSwatch(size,color){
+    return `<div style="width:${size}px;height:${size}px;border-radius:100px;background:${color};"></div>`;
+  }
+
+  function patternRow(steps){
+    return `<div style="display:flex;align-items:center;gap:10px;justify-content:center;">${
+      steps.map(s=>`<div style="width:${s.size}px;height:${s.size}px;border-radius:100px;background:${s.color};flex:none;"></div>`).join("")
+    }<div style="font-family:'Fraunces';font-size:1.6rem;font-weight:600;color:var(--ink-soft);">?</div></div>`;
+  }
+
+  function bandFor(pct){
+    if(pct===null || pct===undefined || isNaN(pct)) return "None";
+    if(pct>=90) return "Exceeding";
+    if(pct>=65) return "Meets";
+    if(pct>=35) return "Developing";
+    return "Emerging";
+  }
+  const BAND_BAR_COLOR = { Emerging:"var(--band-emerging-line)", Developing:"var(--band-developing-line)", Meets:"var(--band-meets-line)", Exceeding:"var(--band-exceeding-line)", None:"var(--band-none-line)" };
+  const BAND_BLURB = {
+    Emerging: "Very early signs — needs lots of adult modelling and support.",
+    Developing: "Showing some understanding — needs regular support to build on.",
+    Meets: "Working at the level typically expected for this point.",
+    Exceeding: "Working beyond what's typically expected for this point.",
+    None: "Not attempted."
+  };
+
+  /* ============================== CONTENT ============================== */
+  const PHONICS_LETTERS = ["m","a","s","d","t","i","n","p","g","o","c","k","u","b","f","e","l","h","r","j","v","y","w","z","x","qu"];
+
+  const HANDWRITING_FIELDS = [
+    { key:"handedness", label:"Handedness", options:["Right","Left","Not yet established"] },
+    { key:"pencilGrip", label:"Pencil grip", options:["Mature (tripod)","Developing","Immature (whole hand)"] },
+    { key:"posture", label:"Posture", options:["Sits well","Some support needed","Struggles to stay seated"] }
+  ];
+
+  const DOMAINS = [
+    {
+      id:"numbers", name:"Number recognition & formation", icon:ICON.numbers,
+      say:"Show two or three number cards (or point along a number line). Ask the child to point to the number you say.",
+      materials:"Number cards or a number line, plus paper &amp; pencil for the formation check.",
+      items:[
+        { id:"n1", type:"select", say:"Can you point to the number 3?", options:[{label:"3",correct:true},{label:"8"},{label:"5"}] },
+        { id:"n2", type:"select", say:"Can you point to the number 8?", options:[{label:"8",correct:true},{label:"6"},{label:"3"}] },
+        { id:"n3", type:"select", say:"Can you point to the number 12?", options:[{label:"21"},{label:"12",correct:true},{label:"2"}] },
+        { id:"n4", type:"observe", say:"Ask the child to write the numbers 1 to 5 on paper.", options:[
+          {label:"Not yet forming numbers",value:0}, {label:"Forms some numbers (1–5)",value:0.5}, {label:"Forms numbers 1–10 confidently",value:1}
+        ]}
+      ]
+    },
+    {
+      id:"shapes", name:"2D shapes", icon:ICON.shapes,
+      say:"Show the three shapes on screen and ask the child to point to the one you name.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sh1", type:"select", say:"Can you point to the circle?", options:[{label:shapeSVG("circle"),correct:true},{label:shapeSVG("oval")},{label:shapeSVG("star")}] },
+        { id:"sh2", type:"select", say:"Can you point to the square?", options:[{label:shapeSVG("triangle")},{label:shapeSVG("square"),correct:true},{label:shapeSVG("rectangle")}] },
+        { id:"sh3", type:"select", say:"Can you point to the triangle?", options:[{label:shapeSVG("star")},{label:shapeSVG("circle")},{label:shapeSVG("triangle"),correct:true}] },
+        { id:"sh4", type:"select", say:"Can you point to the rectangle?", options:[{label:shapeSVG("rectangle"),correct:true},{label:shapeSVG("square")},{label:shapeSVG("triangle")}] }
+      ]
+    },
+    {
+      id:"maths", name:"Maths (counting & comparing)", icon:ICON.maths,
+      say:"Point to each group as you read the question. Give the child a moment to count aloud or with a finger.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"m1", type:"select", say:"Which plate has 4 strawberries?", options:[{label:countGroup("🍓",6)},{label:countGroup("🍓",4),correct:true},{label:countGroup("🍓",3)}] },
+        { id:"m2", type:"select", say:"Which bowl has more grapes?", options:[{label:countGroup("🍇",3)},{label:countGroup("🍇",6),correct:true}] },
+        { id:"m3", type:"select", say:"Here are 2 fish, and 1 more fish. How many fish now?",
+          visual: countGroup("🐟",2) + `<div style="font-family:'Fraunces';font-size:1.4rem;font-weight:600;margin:0 6px;align-self:center;">+</div>` + countGroup("🐟",1),
+          options:[{label:"2"},{label:"4"},{label:"3",correct:true}] }
+      ]
+    },
+    {
+      id:"spatial", name:"Spatial awareness", icon:ICON.spatial,
+      say:"Point to each little picture as you describe it, then ask the child to choose.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sp1", type:"select", say:"Which picture shows the ball UNDER the box?", options:[{label:scene("on")},{label:scene("under"),correct:true},{label:scene("next-to")}] },
+        { id:"sp2", type:"select", say:"Which picture shows the ball BETWEEN the two boxes?", options:[{label:scene("beside-a")},{label:scene("between"),correct:true},{label:scene("beside-b")}] }
+      ]
+    },
+    {
+      id:"sequencing", name:"Sequencing (patterns)", icon:ICON.sequence,
+      say:"Read the pattern aloud left to right, then ask what comes next.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sq1", type:"select", say:"What comes next in this pattern?",
+          visual: patternRow([{size:34,color:"var(--accent)"},{size:34,color:"var(--accent-2)"},{size:34,color:"var(--accent)"},{size:34,color:"var(--accent-2)"},{size:34,color:"var(--accent)"}]),
+          options:[{label:dotSwatch(44,"var(--accent)")},{label:dotSwatch(44,"var(--accent-2)"),correct:true},{label:dotSwatch(44,"var(--ink-soft)")}] },
+        { id:"sq2", type:"select", say:"What size comes next — small, big, small, big...?",
+          visual: patternRow([{size:18,color:"var(--ink-soft)"},{size:34,color:"var(--ink-soft)"},{size:18,color:"var(--ink-soft)"},{size:34,color:"var(--ink-soft)"}]),
+          options:[{label:dotSwatch(18,"var(--ink-soft)"),correct:true},{label:dotSwatch(34,"var(--ink-soft)")},{label:dotSwatch(50,"var(--ink-soft)")}] }
+      ]
+    },
+    {
+      id:"story", name:"Story sequencing", icon:ICON.story,
+      say:"Mix the pictures up (they already are). Ask the child to tap them in the order the story happens.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"st1", type:"order", say:"Put these pictures in order: what happens first, next, and last?",
+          cards:[{key:"sprout",emoji:"🌱",label:"Sprout"},{key:"flower",emoji:"🌻",label:"Flower"},{key:"seed",emoji:"🌰",label:"Seed"}],
+          correctOrder:["seed","sprout","flower"] },
+        { id:"st2", type:"order", say:"Put these pictures in order: getting ready for school.",
+          cards:[{key:"teeth",emoji:"🪥",label:"Brush teeth"},{key:"school",emoji:"🎒",label:"Go to school"},{key:"wake",emoji:"🛏️",label:"Wake up"}],
+          correctOrder:["wake","teeth","school"] }
+      ]
+    },
+    {
+      id:"literacy", name:"Literacy (letters & mark-making)", icon:ICON.literacy,
+      say:"Show the three letters and ask the child to point to the one you name.",
+      materials:"Paper &amp; pencil for the name-writing check.",
+      items:[
+        { id:"l1", type:"select", say:"Can you point to the letter S?", options:[{label:"C"},{label:"S",correct:true},{label:"E"}] },
+        { id:"l2", type:"select", say:"Can you point to the letter m?", options:[{label:"w"},{label:"n"},{label:"m",correct:true}] },
+        { id:"l3", type:"select", say:"Can you point to the letter b?", options:[{label:"d"},{label:"b",correct:true},{label:"p"}] },
+        { id:"l4", type:"observe", say:"Ask the child to write their own name.", options:[
+          {label:"Not yet attempting",value:0}, {label:"Attempts some letters",value:0.5}, {label:"Writes it confidently",value:1}
+        ]}
+      ]
+    },
+    {
+      id:"phonics", name:"Phonics — letter sounds", icon:ICON.phonics, kind:"gridcheck",
+      say:"Point to each letter in turn and ask, “What sound does this letter make?” Tap once for a correct sound, twice for not-yet, a third time to clear it.",
+      materials:"No extra materials needed. Covers the 25 single-letter sounds you're screening for, plus the qu digraph.",
+      letters: PHONICS_LETTERS
+    }
+  ];
+
+  /* ============================== STATE ============================== */
+  let db = null, downloadsCap = null;
+  let roster = []; // array of saved records
+  let rosterUnsub = null;
+  const LS_KEY = "sprout-baseline-records-v1";
+
+  const state = { view:"roster", child:null, run:null, viewingRecord:null };
+
+  function loadLocalRoster(){
+    try{ return JSON.parse(localStorage.getItem(LS_KEY) || "[]"); }catch(e){ return []; }
+  }
+  function saveLocalRoster(list){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(list)); }catch(e){}
+  }
+
+  async function initCapabilities(){
+    try{
+      if(window.claude && typeof window.claude.use === "function"){
+        db = await window.claude.use("db");
+        downloadsCap = await window.claude.use("downloads");
+      }
+    }catch(e){ db = null; downloadsCap = null; }
+    if(db){
+      try{
+        rosterUnsub = db.collection("children").orderBy("dateISO","desc").limit(200).onSnapshot(
+          snap => { roster = snap.docs.map(d => Object.assign({ _id:d.id }, d.data())); if(state.view==="roster") render(); },
+          () => { roster = loadLocalRoster(); if(state.view==="roster") render(); }
+        );
+      }catch(e){ roster = loadLocalRoster(); render(); }
+    } else {
+      roster = loadLocalRoster();
+      render();
+    }
+  }
+
+  async function persistRecord(record){
+    if(db){
+      try{
+        const ref = await db.collection("children").add(record);
+        return ref.id;
+      }catch(e){ /* fall through to local */ }
+    }
+    const list = loadLocalRoster();
+    const id = "local-" + Date.now();
+    list.unshift(Object.assign({ _id:id }, record));
+    saveLocalRoster(list);
+    roster = list;
+    return id;
+  }
+
+  /* ============================== SCORING ============================== */
+  function buildResults(run){
+    const domainResults = {};
+    DOMAINS.forEach(d => {
+      if(d.kind==="gridcheck"){
+        const marks = run.grid || {};
+        const letters = d.letters;
+        const total = letters.length;
+        let correct=0, marked=0;
+        letters.forEach(l => { const m = marks[l]; if(m==="correct"){correct++;marked++;} else if(m==="incorrect"){marked++;} });
+        // Scored out of the FULL letter set, not just the ones marked: a sound
+        // left unmarked was tested but not confirmed correct, so it must count
+        // against the score rather than being silently excluded (otherwise
+        // marking only the correct sounds and leaving the rest blank would
+        // read as 100%).
+        const pct = marked>0 ? Math.round((correct/total)*100) : null;
+        const unmarked = total - marked;
+        let detail = "Not attempted";
+        if(marked>0){
+          detail = `${correct}/${total} sounds correct`;
+          if(unmarked>0) detail += ` — ${unmarked} left unmarked (counted as not yet secure)`;
+        }
+        domainResults[d.id] = { attempted:marked, total, correctCount:correct, pct, band:bandFor(pct), detail };
+        return;
+      }
+      const resp = (run.responses && run.responses[d.id]) || {};
+      let sum=0, n=0;
+      d.items.forEach(item => {
+        const r = resp[item.id];
+        if(r===undefined || r===null) return;
+        n++;
+        if(item.type==="select") sum += r.correct ? 1 : 0;
+        else if(item.type==="observe") sum += r.value;
+        else if(item.type==="order") sum += r.score;
+      });
+      const pct = n>0 ? Math.round((sum/n)*100) : null;
+      domainResults[d.id] = { attempted:n, total:d.items.length, pct, band:bandFor(pct), detail: n>0 ? `${n}/${d.items.length} tasks completed` : "Not attempted" };
+    });
+    const attemptedPcts = Object.values(domainResults).filter(r=>r.pct!==null).map(r=>r.pct);
+    const overallPct = attemptedPcts.length ? Math.round(attemptedPcts.reduce((a,b)=>a+b,0)/attemptedPcts.length) : null;
+    return { domainResults, overallPct, overallBand: bandFor(overallPct) };
+  }
+
+  /* ============================== RENDER: SHELL ============================== */
+  const appEl = document.getElementById("app");
+
+  function fmtTime(sec){
+    const m = Math.floor(sec/60), s = sec%60;
+    return `${m}:${String(s).padStart(2,"0")}`;
+  }
+
+  function topbar(extra){
+    let meta = "";
+    if(state.view==="assessment" && state.run){
+      const elapsed = Math.floor((Date.now()-state.run.startedAt)/1000);
+      meta = `<div class="topbar-meta"><span class="timer" id="timerDisplay">${fmtTime(elapsed)}</span><button class="end-link" data-act="end-early">End now</button></div>`;
+    }
+    return `<div class="topbar">
+      <button class="brand" data-act="go-roster">
+        ${ICON.sprout}
+        <span class="brand-text"><b>Early Years Baseline</b><span>Markham College &middot; EYFS &amp; EAL check-in</span></span>
+      </button>
+      ${extra || meta}
+    </div>`;
+  }
+
+  function render(){
+    let body = "";
+    if(state.view==="roster") body = renderRoster();
+    else if(state.view==="setup") body = renderSetup();
+    else if(state.view==="assessment") body = renderAssessment();
+    else if(state.view==="report") body = renderReport();
+    appEl.innerHTML = topbar() + body;
+    wireEvents();
+    if(state.view==="assessment") startTimerTick();
+  }
+
+  /* ============================== ROSTER ============================== */
+  function renderRoster(){
+    const rows = roster.map(rec => {
+      const dateStr = new Date(rec.dateISO).toLocaleDateString(undefined,{ day:"numeric", month:"short", year:"numeric" });
+      const minis = DOMAINS.map(d => {
+        const r = rec.domainResults && rec.domainResults[d.id];
+        const band = r ? r.band : "None";
+        return `<i style="background:${BAND_BAR_COLOR[band]}" title="${d.name}: ${band}"></i>`;
+      }).join("");
+      return `<button class="roster-row" data-act="view-record" data-id="${esc(rec._id)}">
+        <div>
+          <div class="roster-name">${esc(rec.name)}</div>
+          <div class="roster-meta">Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage || "EAL not specified")}</div>
+        </div>
+        <div class="roster-meta roster-date-col">${dateStr}</div>
+        <div class="roster-mini">${minis}</div>
+        <span class="band-chip band-${rec.overallBand||"None"}">${rec.overallPct!==null && rec.overallPct!==undefined ? rec.overallPct+"%" : "—"} ${rec.overallBand||"No data"}</span>
+      </button>`;
+    }).join("");
+
+    return `<div class="hero-row">
+        <div>
+          <h1>Baseline check-ins</h1>
+          <p class="hero-sub">A 10–15 minute, one-to-one screener across maths, literacy, phonics and early skills — built for five-year-old EAL starters. Results are grouped into Emerging, Developing, Meets and Exceeding.</p>
+        </div>
+        <div class="hero-actions">
+          ${roster.length ? `<button class="btn btn-ghost" data-act="export-csv">${ICON.download} Export all (CSV)</button>` : ""}
+          <button class="btn btn-primary" data-act="new-assessment">+ New assessment</button>
+        </div>
+      </div>
+      ${roster.length ? `<p class="hero-sub" style="margin-top:-10px;margin-bottom:18px;font-size:.85rem;">“Export all” merges every child on this list into one spreadsheet file — open it directly in Google Sheets (File &rarr; Import &rarr; Upload) or Excel.</p>` : ""}
+      <div class="legend">
+        <span><b>Bands:</b></span>
+        <span class="legend-item"><span class="swatch" style="background:var(--band-emerging-line)"></span>Emerging</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--band-developing-line)"></span>Developing</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--band-meets-line)"></span>Meets</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--band-exceeding-line)"></span>Exceeding</span>
+      </div>
+      ${roster.length ? `<div class="roster-list">${rows}</div>` : `<div class="empty-state">${ICON.empty}<div><b>No check-ins recorded yet.</b><br>Start your first baseline assessment above.</div></div>`}
+    `;
+  }
+
+  /* ============================== SETUP ============================== */
+  function renderSetup(){
+    const today = new Date().toISOString().slice(0,10);
+    return `<button class="btn-quiet" data-act="go-roster">&larr; Back to check-ins</button>
+      <div class="card" style="margin-top:14px;max-width:640px;">
+        <span class="eyebrow">New baseline check-in</span>
+        <h1 style="font-size:1.5rem;margin-top:6px;">Before you begin</h1>
+        <div class="form-grid">
+          <div class="field full"><label>Child's name</label><input id="f-name" type="text" placeholder="e.g. Amina K." autofocus></div>
+          <div class="field"><label>Age</label><input id="f-age" type="text" value="5" placeholder="5"></div>
+          <div class="field"><label>Date</label><input id="f-date" type="date" value="${today}"></div>
+          <div class="field full"><label>Home language(s) / EAL notes</label><input id="f-lang" type="text" placeholder="e.g. Polish — 4 months in an English setting"></div>
+          <div class="field full"><label>Assessor</label><input id="f-assessor" type="text" placeholder="Your name"></div>
+        </div>
+        <div class="setup-note">${ICON.info}<div>Takes about <b>10–15 minutes</b>, done one-to-one. Have paper and a pencil ready for two short writing checks — everything else runs on screen. You can end early at any point and still get a report on what was covered.</div></div>
+        <div style="margin-top:22px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary" data-act="begin-assessment">Start assessment</button>
+        </div>
+      </div>`;
+  }
+
+  /* ============================== ASSESSMENT RUNNER ============================== */
+  function startTimerTick(){
+    if(state._timerHandle) clearInterval(state._timerHandle);
+    state._timerHandle = setInterval(() => {
+      const el = document.getElementById("timerDisplay");
+      if(!el || !state.run){ clearInterval(state._timerHandle); return; }
+      el.textContent = fmtTime(Math.floor((Date.now()-state.run.startedAt)/1000));
+    }, 1000);
+  }
+
+  function currentDomain(){ return DOMAINS[state.run.domainIdx]; }
+
+  function renderAssessment(){
+    const run = state.run;
+    const totalSteps = DOMAINS.length;
+    if(run.domainIdx >= totalSteps){
+      return `<div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>` + renderOverallComment();
+    }
+    const domain = currentDomain();
+    const pct = Math.round((run.domainIdx / totalSteps) * 100);
+    const progress = `<div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="section-tag">${domain.icon}<span>Section ${run.domainIdx+1} of ${totalSteps} &middot; ${esc(state.child.name)}</span></div>`;
+
+    if(run.phase==="intro"){
+      return progress + renderDomainIntro(domain);
+    }
+    if(run.phase==="notes"){
+      return progress + renderDomainNotes(domain);
+    }
+    if(domain.kind==="gridcheck"){
+      return progress + renderGridcheck(domain);
+    }
+    return progress + renderItem(domain, domain.items[run.itemIdx]);
+  }
+
+  function renderDomainNotes(domain){
+    const val = state.run.notes[domain.id] || "";
+    return `<div class="card">
+      <span class="eyebrow">Section notes</span>
+      <h2 style="margin-top:6px;">${esc(domain.name)}</h2>
+      <p class="hero-sub" style="margin:8px 0 14px;">Anything worth remembering about how this section went? Optional.</p>
+      <div class="field full">
+        <label>Notes</label>
+        <textarea id="domainNoteInput" rows="4" placeholder="e.g. Confused b/d consistently, needed the question repeated slowly...">${esc(val)}</textarea>
+      </div>
+      <div class="stage-footer">
+        <div class="left-controls"><button class="btn-quiet" data-act="back-to-section">&larr; Back to section</button></div>
+        <button class="btn btn-primary" data-act="continue-from-notes">Continue</button>
+      </div>
+    </div>`;
+  }
+
+  function renderOverallComment(){
+    const val = state.run.overallComment || "";
+    const fields = HANDWRITING_FIELDS.map(f => `
+      <div class="obs-field">
+        <span class="field-label">${esc(f.label)}</span>
+        <div class="chip-group">
+          ${f.options.map(o => `<button type="button" class="chip-btn ${state.run[f.key]===o?'active':''}" data-act="pick-chip" data-group="${f.key}" data-value="${esc(o)}">${esc(o)}</button>`).join("")}
+        </div>
+      </div>`).join("");
+    return `<div class="card">
+      <span class="eyebrow">Last step</span>
+      <h1 style="font-size:1.5rem;margin-top:6px;">Wrap-up</h1>
+      <p class="hero-sub" style="margin:8px 0 18px;">A few quick observations, easiest to judge from the number and name writing checks earlier. Optional — tap again to clear a choice.</p>
+      ${fields}
+      <div class="field full">
+        <label>Overall comment</label>
+        <textarea id="overallNoteInput" rows="6" placeholder="e.g. Settled quickly, more confident when questions were repeated slowly and paired with gestures...">${esc(val)}</textarea>
+      </div>
+      <div class="stage-footer">
+        <div class="left-controls"><button class="btn-quiet" data-act="back-to-last-notes">&larr; Back</button></div>
+        <button class="btn btn-primary" data-act="finish-overall">Finish assessment</button>
+      </div>
+    </div>`;
+  }
+
+  function renderDomainIntro(domain){
+    return `<div class="card">
+      <div class="intro-grid">
+        <div class="intro-icon">${domain.icon}</div>
+        <div>
+          <h2>${esc(domain.name)}</h2>
+          <div class="say-block"><b>How to run it:</b> ${domain.say}</div>
+          <div class="materials-line">${ICON.info} ${domain.materials}</div>
+        </div>
+      </div>
+      <div class="stage-footer">
+        <div class="left-controls"><button class="btn-quiet" data-act="prev-domain">&larr; Back</button></div>
+        <button class="btn btn-primary" data-act="begin-domain">Begin section</button>
+      </div>
+    </div>`;
+  }
+
+  function renderItem(domain, item){
+    let visual = item.visual ? `<div class="visual-block" style="gap:10px;">${item.visual}</div>` : "";
+    let body = "";
+    if(item.type==="select"){
+      const cols = item.options.length===2 ? " opts-2" : "";
+      body = `<div class="option-grid${cols}" id="optGrid">
+        ${item.options.map((o,i)=>{
+          const content = o.label.startsWith("<") ? o.label : `<span class="glyph">${esc(o.label)}</span>`;
+          return `<button class="opt-tile" data-act="pick-select" data-idx="${i}">${content}</button>`;
+        }).join("")}
+      </div>`;
+    } else if(item.type==="observe"){
+      body = `<div class="rate-grid" id="rateGrid">
+        ${item.options.map((o,i)=>`<button class="rate-opt" data-act="pick-observe" data-idx="${i}"><span>${esc(o.label)}</span></button>`).join("")}
+      </div>`;
+    } else if(item.type==="order"){
+      const order = state.run.orderTemp || [];
+      body = `<div class="order-row" id="orderRow">
+        ${item.cards.map(c=>{
+          const pos = order.indexOf(c.key);
+          return `<button class="order-card ${pos>=0?'placed':''}" data-act="pick-order" data-key="${c.key}">
+            ${pos>=0?`<span class="badge">${pos+1}</span>`:""}
+            <span class="emoji">${c.emoji}</span>${esc(c.label)}
+          </button>`;
+        }).join("")}
+      </div><div class="order-hint">Tap the pictures in the order the story happens. <button class="btn-quiet" data-act="reset-order" style="padding:0;">Reset</button></div>`;
+    }
+    const answered = !!(state.run.responses[domain.id] && state.run.responses[domain.id][item.id]);
+    return `<div class="card">
+      <div class="prompt"><span class="say-cue">Ask the child</span>${esc(item.say)}</div>
+      ${visual}
+      ${body}
+      <div class="feedback-row ${state.run._feedback ? (state.run._feedback.ok?'ok':'no') : ''}" id="feedbackRow">${state.run._feedback ? state.run._feedback.text : ""}</div>
+      <div class="stage-footer">
+        <div class="left-controls">
+          <button class="btn-quiet" data-act="prev-item">&larr; Back</button>
+          <button class="btn-quiet" data-act="skip-item">Skip this task</button>
+        </div>
+        <button class="btn btn-primary" data-act="next-item" ${answered ? "" : "disabled"}>Next</button>
+      </div>
+    </div>`;
+  }
+
+  function renderGridcheck(domain){
+    const marks = state.run.grid || {};
+    const total = domain.letters.length;
+    let correct=0, marked=0;
+    domain.letters.forEach(l=>{ if(marks[l]==="correct"){correct++;marked++;} else if(marks[l]==="incorrect"){marked++;} });
+    const unmarked = total - marked;
+    return `<div class="card">
+      <div class="prompt"><span class="say-cue">Ask the child, for each letter</span>What sound does this letter make?</div>
+      <div class="phon-grid">
+        ${domain.letters.map(l=>{
+          const m = marks[l];
+          return `<div class="phon-tile ${l.length>1?'wide':''} ${m||''}" data-act="toggle-phon" data-letter="${l}">${l}${m?`<span class="dot"></span>`:""}</div>`;
+        }).join("")}
+      </div>
+      <div class="phon-summary"><span>Correct: <b>${correct}</b>/${total}</span><span>Not yet marked: <b>${unmarked}</b></span></div>
+      ${unmarked>0 ? `<p class="order-hint" style="margin-top:2px;">Tap a letter once for a correct sound, twice for not yet. Anything left blank counts against the score, so mark every sound you test — including the ones the child gets wrong.</p>` : ""}
+      <div class="stage-footer">
+        <div class="left-controls"><button class="btn-quiet" data-act="prev-domain">&larr; Back</button></div>
+        <button class="btn btn-primary" data-act="finish-grid">Continue</button>
+      </div>
+    </div>`;
+  }
+
+  /* ---- interaction handlers ---- */
+  function recordSelect(domain, item, idx){
+    const opt = item.options[idx];
+    state.run.responses[domain.id] = state.run.responses[domain.id] || {};
+    state.run.responses[domain.id][item.id] = { correct: !!opt.correct };
+    state.run._feedback = opt.correct ? { ok:true, text:"Marked correct." } : { ok:false, text:"Marked not yet — moving on." };
+    render();
+  }
+  function recordObserve(domain, item, idx){
+    const opt = item.options[idx];
+    state.run.responses[domain.id] = state.run.responses[domain.id] || {};
+    state.run.responses[domain.id][item.id] = { value: opt.value };
+    state.run._feedback = { ok:true, text:"Recorded." };
+    render();
+  }
+  function pickOrderCard(domain, item, key){
+    state.run.orderTemp = state.run.orderTemp || [];
+    const idx = state.run.orderTemp.indexOf(key);
+    if(idx>=0){ state.run.orderTemp.splice(idx,1); }
+    else if(state.run.orderTemp.length < item.cards.length){ state.run.orderTemp.push(key); }
+    if(state.run.orderTemp.length === item.cards.length){
+      let matches=0;
+      item.correctOrder.forEach((k,i)=>{ if(state.run.orderTemp[i]===k) matches++; });
+      const score = matches/item.cards.length;
+      state.run.responses[domain.id] = state.run.responses[domain.id] || {};
+      state.run.responses[domain.id][item.id] = { score, order: state.run.orderTemp.slice() };
+      state.run._feedback = score===1 ? { ok:true, text:"Order recorded — matches the story!" } : { ok:false, text:`Order recorded — ${matches}/${item.cards.length} in the right place.` };
+    }
+    render();
+  }
+
+  function goNextItem(){
+    const domain = currentDomain();
+    state.run._feedback = null;
+    state.run.orderTemp = [];
+    if(state.run.itemIdx < domain.items.length-1){
+      state.run.itemIdx++;
+      render();
+    } else {
+      state.run.phase = "notes";
+      render();
+    }
+  }
+  function skipItem(){
+    goNextItem();
+  }
+  function prevItem(){
+    state.run._feedback = null;
+    if(state.run.itemIdx>0){ state.run.itemIdx--; render(); }
+    else { state.run.phase="intro"; render(); }
+  }
+  function advanceDomain(){
+    if(state.run.domainIdx < DOMAINS.length-1){
+      state.run.domainIdx++;
+      state.run.itemIdx = 0;
+      state.run.phase = "intro";
+      state.run.orderTemp = [];
+      render();
+    } else {
+      state.run.domainIdx = DOMAINS.length;
+      render();
+    }
+  }
+  function prevDomain(){
+    if(state.run.domainIdx>0){
+      state.run.domainIdx--;
+      state.run.phase = "notes";
+      render();
+    }
+  }
+  function togglePhon(letter){
+    const g = state.run.grid = state.run.grid || {};
+    const cur = g[letter];
+    g[letter] = cur===undefined ? "correct" : cur==="correct" ? "incorrect" : undefined;
+    render();
+  }
+
+  async function finishAssessment(){
+    if(state._timerHandle) clearInterval(state._timerHandle);
+    const results = buildResults(state.run);
+    const record = {
+      name: state.child.name, age: state.child.age, homeLanguage: state.child.homeLanguage,
+      assessor: state.child.assessor, dateISO: state.child.dateISO,
+      durationSeconds: Math.floor((Date.now()-state.run.startedAt)/1000),
+      domainResults: results.domainResults, overallPct: results.overallPct, overallBand: results.overallBand,
+      domainNotes: state.run.notes || {}, overallComment: state.run.overallComment || "",
+      handedness: state.run.handedness || "", pencilGrip: state.run.pencilGrip || "", posture: state.run.posture || ""
+    };
+    const id = await persistRecord(record);
+    state.viewingRecord = Object.assign({ _id:id }, record);
+    state.view = "report";
+    state.run = null;
+    render();
+  }
+
+  function endEarly(){
+    showConfirm("End this assessment now? Sections not yet started will show as “Not attempted”.", finishAssessment, { title:"End assessment?", confirmLabel:"End now" });
+  }
+
+  function finishGridWithCheck(){
+    const domain = currentDomain();
+    const marks = state.run.grid || {};
+    const unmarked = domain.letters.filter(l => marks[l]!=="correct" && marks[l]!=="incorrect").length;
+    const proceedToNotes = () => { state.run.phase = "notes"; render(); };
+    if(unmarked>0){
+      showConfirm(`${unmarked} sound${unmarked===1?"":"s"} still ${unmarked===1?"isn't":"aren't"} marked. They'll count as not yet secure in the score. Finish anyway, or go back and mark them?`,
+        proceedToNotes, { title:"Some sounds aren't marked yet", confirmLabel:"Finish anyway", cancelLabel:"Go back and mark" });
+    } else {
+      proceedToNotes();
+    }
+  }
+
+  function showConfirm(message, onConfirm, opts){
+    opts = opts || {};
+    const div = document.createElement("div");
+    div.className = "csv-overlay";
+    div.innerHTML = `<div class="csv-box" style="max-width:420px;">
+      <h3 style="margin-bottom:10px;">${esc(opts.title || "Are you sure?")}</h3>
+      <p class="hero-sub" style="margin-bottom:16px;">${esc(message)}</p>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn btn-ghost" id="confirmNo">${esc(opts.cancelLabel || "Cancel")}</button>
+        <button class="btn btn-primary" id="confirmYes">${esc(opts.confirmLabel || "Confirm")}</button>
+      </div>
+    </div>`;
+    document.body.appendChild(div);
+    div.querySelector("#confirmNo").onclick = ()=> div.remove();
+    div.querySelector("#confirmYes").onclick = ()=> { div.remove(); onConfirm(); };
+    div.addEventListener("click", e=>{ if(e.target===div) div.remove(); });
+  }
+
+  /* ============================== REPORT ============================== */
+  function renderReport(){
+    const rec = state.viewingRecord;
+    const dateStr = new Date(rec.dateISO).toLocaleDateString(undefined,{ day:"numeric", month:"long", year:"numeric" });
+    const rows = DOMAINS.map(d=>{
+      const r = rec.domainResults[d.id];
+      const pct = r.pct===null ? 0 : r.pct;
+      const note = rec.domainNotes && rec.domainNotes[d.id];
+      return `<div class="domain-report-row">
+        ${d.icon}
+        <div>
+          <div class="dr-name">${esc(d.name)}</div>
+          <div class="dr-bar-track"><div class="dr-bar-fill" style="width:${pct}%;background:${BAND_BAR_COLOR[r.band]}"></div></div>
+          <div class="dr-detail">${esc(r.detail)}</div>
+          ${note ? `<div class="dr-detail" style="font-style:italic;margin-top:4px;">“${esc(note)}”</div>` : ""}
+        </div>
+        <span class="band-chip band-${r.band}">${r.pct!==null?r.pct+"%":"—"} ${r.band}</span>
+      </div>`;
+    }).join("");
+    return `<button class="btn-quiet" data-act="go-roster">&larr; Back to check-ins</button>
+    <div class="card" style="margin-top:14px;">
+      <div class="print-only" style="margin-bottom:14px;"><b style="font-family:'Fraunces';font-size:1.3rem;">Early Years Baseline</b> — Markham College EYFS &amp; EAL check-in report</div>
+      <div class="report-head">
+        <div>
+          <span class="eyebrow">Baseline report</span>
+          <h1 style="font-size:1.6rem;margin-top:4px;">${esc(rec.name)}</h1>
+          <p class="hero-sub" style="margin-top:4px;">Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage||"EAL not specified")} &middot; ${dateStr} &middot; Assessor: ${esc(rec.assessor||"—")}</p>
+        </div>
+        <div class="report-overall">
+          <div class="overall-badge band-${rec.overallBand}" style="border-color:${BAND_BAR_COLOR[rec.overallBand]}">
+            <span class="pct">${rec.overallPct!==null?rec.overallPct+"%":"—"}</span><span class="lbl">${esc(rec.overallBand)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="domain-report">${rows}</div>
+      <div class="say-block" style="margin-top:20px;"><b>${esc(rec.overallBand)}:</b> ${BAND_BLURB[rec.overallBand]}</div>
+      ${(rec.handedness||rec.pencilGrip||rec.posture) ? `<div style="margin-top:18px;"><span class="eyebrow">Handwriting observations</span><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        ${rec.handedness?`<span class="info-chip">Handedness: ${esc(rec.handedness)}</span>`:""}
+        ${rec.pencilGrip?`<span class="info-chip">Pencil grip: ${esc(rec.pencilGrip)}</span>`:""}
+        ${rec.posture?`<span class="info-chip">Posture: ${esc(rec.posture)}</span>`:""}
+      </div></div>` : ""}
+      ${rec.overallComment ? `<div style="margin-top:16px;"><span class="eyebrow">Overall comment</span><p style="margin-top:6px;line-height:1.55;">${esc(rec.overallComment)}</p></div>` : ""}
+      <div class="report-actions">
+        <button class="btn btn-primary" data-act="new-assessment">+ New assessment</button>
+        <button class="btn btn-ghost" data-act="print-report">${ICON.printer} Print / save PDF</button>
+        <button class="btn btn-ghost" data-act="go-roster">All check-ins</button>
+      </div>
+    </div>`;
+  }
+
+  /* ============================== CSV EXPORT ============================== */
+  function buildCSV(){
+    const header = ["Name","Age","Home language","Assessor","Date",
+      ...DOMAINS.flatMap(d=>[d.name+" %", d.name+" band"]),
+      "Overall %","Overall band","Handedness","Pencil grip","Posture","Overall comment"];
+    const lines = [header];
+    roster.forEach(rec=>{
+      const row = [rec.name, rec.age||"", rec.homeLanguage||"", rec.assessor||"", rec.dateISO ? rec.dateISO.slice(0,10) : ""];
+      DOMAINS.forEach(d=>{
+        const r = rec.domainResults && rec.domainResults[d.id];
+        row.push(r && r.pct!==null ? r.pct : "", r ? r.band : "");
+      });
+      row.push(rec.overallPct!==null && rec.overallPct!==undefined ? rec.overallPct : "");
+      row.push(rec.overallBand||"");
+      row.push(rec.handedness||"", rec.pencilGrip||"", rec.posture||"", rec.overallComment||"");
+      lines.push(row);
+    });
+    return lines.map(r => r.map(v => { const s=String(v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(",")).join("\n");
+  }
+
+  async function exportCSV(){
+    const csv = buildCSV();
+    if(downloadsCap){
+      try{
+        await downloadsCap.save({ filename:"early-years-baseline-all-children.csv", data:csv });
+        return;
+      }catch(e){ /* fall through to manual copy */ }
+    }
+    // Outside a claude.ai artifact frame, a real browser download works fine
+    // (the artifact viewer sandbox is what blocks <a download> — a plain
+    // hosted page has no such restriction).
+    if(!window.claude){
+      try{
+        downloadFile(csv, "early-years-baseline-all-children.csv", "text/csv;charset=utf-8;");
+        return;
+      }catch(e){ /* fall through to manual copy */ }
+    }
+    showCsvOverlay(csv);
+  }
+  function downloadFile(content, filename, mime){
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  }
+  function showCsvOverlay(csv){
+    const div = document.createElement("div");
+    div.className = "csv-overlay";
+    div.innerHTML = `<div class="csv-box">
+      <h3 style="margin-bottom:10px;">Export all check-ins</h3>
+      <p class="hero-sub" style="margin-bottom:10px;">Downloads aren't available in this view. Select all, copy, then in Google Sheets: File &rarr; Import &rarr; Upload &rarr; Paste tab-separated text (or paste into a blank sheet and run Data &rarr; Split text to columns).</p>
+      <textarea readonly>${esc(csv)}</textarea>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;">
+        <button class="btn btn-ghost" id="csvClose">Close</button>
+      </div>
+    </div>`;
+    document.body.appendChild(div);
+    const ta = div.querySelector("textarea");
+    ta.focus(); ta.select();
+    div.querySelector("#csvClose").onclick = ()=> div.remove();
+    div.addEventListener("click", e=>{ if(e.target===div) div.remove(); });
+  }
+
+  /* ============================== EVENTS ============================== */
+  function wireEvents(){
+    appEl.querySelectorAll("[data-act]").forEach(el=>{
+      el.addEventListener("click", onAction);
+    });
+  }
+
+  function onAction(e){
+    const act = e.currentTarget.dataset.act;
+    const domain = state.run ? currentDomain() : null;
+    const item = domain && domain.kind!=="gridcheck" ? domain.items[state.run.itemIdx] : null;
+    switch(act){
+      case "go-roster": state.view="roster"; state.run=null; render(); break;
+      case "new-assessment": state.view="setup"; render(); break;
+      case "begin-assessment": beginAssessment(); break;
+      case "view-record": {
+        const id = e.currentTarget.dataset.id;
+        const rec = roster.find(r => r._id===id);
+        if(rec){ state.viewingRecord = rec; state.view="report"; render(); }
+        break;
+      }
+      case "export-csv": exportCSV(); break;
+      case "begin-domain": state.run.phase = domain.kind==="gridcheck" ? "grid-done" : "items"; render(); break;
+      case "prev-domain": prevDomain(); break;
+      case "pick-select": recordSelect(domain, item, +e.currentTarget.dataset.idx); break;
+      case "pick-observe": recordObserve(domain, item, +e.currentTarget.dataset.idx); break;
+      case "pick-order": pickOrderCard(domain, item, e.currentTarget.dataset.key); break;
+      case "reset-order": state.run.orderTemp = []; state.run.responses[domain.id] && delete state.run.responses[domain.id][item.id]; state.run._feedback=null; render(); break;
+      case "next-item": goNextItem(); break;
+      case "prev-item": prevItem(); break;
+      case "skip-item": skipItem(); break;
+      case "toggle-phon": togglePhon(e.currentTarget.dataset.letter); break;
+      case "finish-grid": finishGridWithCheck(); break;
+      case "back-to-section": {
+        saveDomainNoteFromDOM(domain.id);
+        state.run.phase = domain.kind==="gridcheck" ? "grid-done" : "items";
+        if(domain.kind!=="gridcheck") state.run.itemIdx = domain.items.length-1;
+        render();
+        break;
+      }
+      case "continue-from-notes": saveDomainNoteFromDOM(domain.id); advanceDomain(); break;
+      case "back-to-last-notes": saveOverallCommentFromDOM(); state.run.domainIdx = DOMAINS.length-1; state.run.phase = "notes"; render(); break;
+      case "finish-overall": saveOverallCommentFromDOM(); finishAssessment(); break;
+      case "pick-chip": {
+        saveOverallCommentFromDOM();
+        const group = e.currentTarget.dataset.group, value = e.currentTarget.dataset.value;
+        state.run[group] = state.run[group]===value ? "" : value;
+        render();
+        break;
+      }
+      case "end-early": endEarly(); break;
+      case "print-report": window.print(); break;
+    }
+  }
+
+  function saveDomainNoteFromDOM(domainId){
+    const ta = document.getElementById("domainNoteInput");
+    if(ta) state.run.notes[domainId] = ta.value;
+  }
+  function saveOverallCommentFromDOM(){
+    const ta = document.getElementById("overallNoteInput");
+    if(ta) state.run.overallComment = ta.value;
+  }
+
+  function beginAssessment(){
+    const name = document.getElementById("f-name").value.trim();
+    if(!name){ document.getElementById("f-name").focus(); return; }
+    state.child = {
+      name,
+      age: document.getElementById("f-age").value.trim() || "5",
+      dateISO: new Date(document.getElementById("f-date").value || Date.now()).toISOString(),
+      homeLanguage: document.getElementById("f-lang").value.trim(),
+      assessor: document.getElementById("f-assessor").value.trim()
+    };
+    state.run = { domainIdx:0, itemIdx:0, phase:"intro", responses:{}, grid:{}, orderTemp:[], notes:{}, overallComment:"", handedness:"", pencilGrip:"", posture:"", startedAt:Date.now(), _feedback:null };
+    state.view = "assessment";
+    render();
+  }
+
+  /* ============================== BOOT ============================== */
+  render();
+  initCapabilities();
+})();
+</script>
+</body>
+</html>
