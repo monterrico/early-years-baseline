@@ -7,6 +7,9 @@
 <title>Early Years Baseline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@500;600;700;800&display=swap">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
   :root{
     --paper:#FBFAF7;
@@ -152,6 +155,11 @@
   .empty-state{ text-align:center; padding:52px 20px; color:var(--ink-soft); border:1.5px dashed var(--line); border-radius:16px; }
   .empty-state svg{ width:40px; height:40px; margin-bottom:10px; opacity:.6; }
 
+  .identity-bar{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--paper-sunk); border:1px solid var(--line); border-radius:11px; padding:10px 16px; font-size:.85rem; color:var(--ink-soft); margin-bottom:18px; }
+  .identity-bar b{ color:var(--ink); }
+  .identity-bar.is-admin{ border-color:var(--accent-2); color:var(--accent-2-strong); }
+  .identity-bar.is-admin b{ color:var(--accent-2-strong); }
+
   /* ---------- band chip ---------- */
   .band-chip{
     display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:700;
@@ -246,6 +254,17 @@
   .feedback-row.ok{ color:var(--band-meets-fg); }
   .feedback-row.no{ color:var(--band-developing-fg); }
 
+  .evidence-block{ margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); }
+  .evidence-thumbs{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .evidence-chip{ display:inline-flex; align-items:center; gap:6px; background:var(--paper-sunk); border:1px solid var(--line); border-radius:100px; padding:5px 6px 5px 12px; font-size:.8rem; font-weight:600; cursor:pointer; }
+  .evidence-chip:hover{ border-color:var(--accent-2); }
+  .evidence-remove{ background:var(--line); border:none; border-radius:100px; width:18px; height:18px; line-height:1; color:var(--ink); cursor:pointer; font-size:.8rem; }
+
+  .draft-banner{ display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; background:var(--paper-sunk); border:1.5px solid var(--accent-2); border-radius:13px; padding:14px 18px; margin-bottom:18px; }
+  .draft-banner b{ color:var(--ink); }
+
+  .remaining-note{ font-size:.78rem; color:var(--ink-soft); font-weight:600; }
+
   .stage-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; padding-top:18px; border-top:1px solid var(--line); }
   .stage-footer .left-controls{ display:flex; gap:14px; align-items:center; }
 
@@ -329,6 +348,7 @@
     empty: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v6" stroke-linecap="round"/></svg>`,
     printer: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V4h12v5M6 18h12v-5H6v5ZM4 9h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-2M4 16H2a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h1" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     download: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 18v1.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V18" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    camera: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8.5a1.5 1.5 0 0 1 1.5-1.5h2l1-2h7l1 2h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.4"/></svg>`,
   };
 
   /* ============================== HELPERS ============================== */
@@ -393,6 +413,12 @@
 
   /* ============================== CONTENT ============================== */
   const PHONICS_LETTERS = ["m","a","s","d","t","i","n","p","g","o","c","k","u","b","f","e","l","h","r","j","v","y","w","z","x","qu"];
+
+  const CLASSROOMS = [
+    "FS1R","FS1S","FS1T","FS1U","FS1V","FS1W",
+    "FS2R","FS2S","FS2T","FS2V","FS2W",
+    "KR","KS","KT","KU","KV","KW"
+  ];
 
   const HANDWRITING_FIELDS = [
     { key:"handedness", label:"Handedness", options:["Right","Left","Not yet established"] },
@@ -494,10 +520,24 @@
   ];
 
   /* ============================== STATE ============================== */
-  let db = null, downloadsCap = null;
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyD2z4fy1CigqRc-re-ndFjykZo7Gdf_BSs",
+    authDomain: "early-years-baseline.firebaseapp.com",
+    projectId: "early-years-baseline",
+    storageBucket: "early-years-baseline.firebasestorage.app",
+    messagingSenderId: "592017914274",
+    appId: "1:592017914274:web:a753c2d66617de20acdafb"
+  };
+  const ADMIN_PASSCODE = "adminadmin";
+
+  let storeKind = "local"; // 'firebase' | 'claude' | 'local'
+  let db = null, downloadsCap = null; // claude capabilities
+  let fsCol = null; // firestore collection ref, when storeKind === 'firebase'
   let roster = []; // array of saved records
-  let rosterUnsub = null;
   const LS_KEY = "sprout-baseline-records-v1";
+  const LAST_ASSESSOR_KEY = "eyb-active-assessor"; // convenience prefill only, not privacy-scoped
+  const CLASSROOM_KEY = "eyb-active-classroom";
+  const ADMIN_KEY = "eyb-admin-unlocked";
 
   const state = { view:"roster", child:null, run:null, viewingRecord:null };
 
@@ -508,7 +548,98 @@
     try{ localStorage.setItem(LS_KEY, JSON.stringify(list)); }catch(e){}
   }
 
+  function getLastAssessorName(){ try{ return localStorage.getItem(LAST_ASSESSOR_KEY) || ""; }catch(e){ return ""; } }
+  function setLastAssessorName(name){ try{ localStorage.setItem(LAST_ASSESSOR_KEY, name); }catch(e){} }
+  function getActiveClassroom(){ try{ return localStorage.getItem(CLASSROOM_KEY) || ""; }catch(e){ return ""; } }
+  function setActiveClassroom(name){ try{ localStorage.setItem(CLASSROOM_KEY, name); }catch(e){} }
+  function clearActiveClassroom(){ try{ localStorage.removeItem(CLASSROOM_KEY); }catch(e){} }
+  function isAdminUnlocked(){ try{ return localStorage.getItem(ADMIN_KEY) === "1"; }catch(e){ return false; } }
+  function setAdminUnlocked(v){ try{ v ? localStorage.setItem(ADMIN_KEY,"1") : localStorage.removeItem(ADMIN_KEY); }catch(e){} }
+
+  /** Every classroom sees only its own check-ins; the admin passcode reveals all. */
+  function getVisibleRoster(){
+    if(isAdminUnlocked()) return roster;
+    const cls = getActiveClassroom().trim().toUpperCase();
+    return roster.filter(r => (r.classroom||"").trim().toUpperCase() === cls);
+  }
+
+  /* ---- evidence photos/videos: kept in this device's own IndexedDB, never
+     leave the device (no Blaze-tier cloud storage set up) — only a small
+     {id,type,name,capturedAt} record travels with the check-in itself. ---- */
+  function openEvidenceDB(){
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open("eyb-evidence", 1);
+      req.onupgradeneeded = () => { req.result.createObjectStore("files"); };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function saveEvidenceBlob(id, blob){
+    const db = await openEvidenceDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("files", "readwrite");
+      tx.objectStore("files").put(blob, id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+  async function getEvidenceBlob(id){
+    const db = await openEvidenceDB();
+    return new Promise((resolve, reject) => {
+      const req = db.transaction("files", "readonly").objectStore("files").get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function deleteEvidenceBlob(id){
+    try{
+      const db = await openEvidenceDB();
+      db.transaction("files", "readwrite").objectStore("files").delete(id);
+    }catch(e){ /* best effort */ }
+  }
+
+  /* ---- pause/resume: autosaved continuously while an assessment is open,
+     scoped per classroom so switching class on a shared device never shows
+     someone else's paused check-in. ---- */
+  function draftKeyFor(classroom){ return "eyb-draft-" + (classroom||"").trim().toUpperCase(); }
+  function saveDraft(){
+    if(!state.run || !state.child) return;
+    try{
+      localStorage.setItem(draftKeyFor(state.child.classroom || getActiveClassroom()), JSON.stringify({ child: state.child, run: state.run, savedAt: Date.now() }));
+    }catch(e){ /* storage full or unavailable: assessment still works, just unprotected */ }
+  }
+  function loadDraft(classroom){
+    try{ const raw = localStorage.getItem(draftKeyFor(classroom)); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+  }
+  function clearDraft(classroom){
+    try{ localStorage.removeItem(draftKeyFor(classroom)); }catch(e){}
+  }
+  function timeAgo(ts){
+    const mins = Math.max(0, Math.round((Date.now()-ts)/60000));
+    if(mins<1) return "just now";
+    if(mins===1) return "1 minute ago";
+    if(mins<60) return `${mins} minutes ago`;
+    const hrs = Math.round(mins/60);
+    return hrs===1 ? "1 hour ago" : `${hrs} hours ago`;
+  }
+
   async function initCapabilities(){
+    // 1) Prefer Firebase: a real shared backend, so results sync across every
+    // teacher's own device (a plain static page has no other way to do this).
+    if(typeof firebase !== "undefined"){
+      try{
+        firebase.initializeApp(FIREBASE_CONFIG);
+        await firebase.auth().signInAnonymously();
+        fsCol = firebase.firestore().collection("checkins");
+        storeKind = "firebase";
+        fsCol.orderBy("dateISO","desc").limit(500).onSnapshot(
+          snap => { roster = snap.docs.map(d => Object.assign({ _id:d.id }, d.data())); if(state.view==="roster") render(); },
+          () => { /* Firestore listener errors surface nothing further; UI keeps last-known roster */ }
+        );
+        return;
+      }catch(e){ fsCol = null; storeKind = "local"; }
+    }
+    // 2) Fall back to Claude's own shared storage when running as an Artifact.
     try{
       if(window.claude && typeof window.claude.use === "function"){
         db = await window.claude.use("db");
@@ -516,20 +647,29 @@
       }
     }catch(e){ db = null; downloadsCap = null; }
     if(db){
+      storeKind = "claude";
       try{
-        rosterUnsub = db.collection("children").orderBy("dateISO","desc").limit(200).onSnapshot(
+        db.collection("children").orderBy("dateISO","desc").limit(200).onSnapshot(
           snap => { roster = snap.docs.map(d => Object.assign({ _id:d.id }, d.data())); if(state.view==="roster") render(); },
           () => { roster = loadLocalRoster(); if(state.view==="roster") render(); }
         );
-      }catch(e){ roster = loadLocalRoster(); render(); }
-    } else {
-      roster = loadLocalRoster();
-      render();
+        return;
+      }catch(e){ /* fall through to local */ }
     }
+    // 3) Last resort: this device's own browser storage only.
+    storeKind = "local";
+    roster = loadLocalRoster();
+    render();
   }
 
   async function persistRecord(record){
-    if(db){
+    if(storeKind==="firebase" && fsCol){
+      try{
+        const ref = await fsCol.add(record);
+        return ref.id;
+      }catch(e){ /* fall through to local as last resort */ }
+    }
+    if(storeKind==="claude" && db){
       try{
         const ref = await db.collection("children").add(record);
         return ref.id;
@@ -594,11 +734,23 @@
     return `${m}:${String(s).padStart(2,"0")}`;
   }
 
+  function remainingLabel(run, totalSteps){
+    const remaining = totalSteps - run.domainIdx;
+    let text = remaining<=1 ? "Last section" : `${remaining} sections to go`;
+    if(run.domainIdx > 0){
+      const elapsedMin = (Date.now()-run.startedAt)/60000;
+      const perDomain = elapsedMin / run.domainIdx;
+      const remainMin = Math.max(1, Math.round(perDomain * remaining));
+      text += ` &middot; ~${remainMin} min left`;
+    }
+    return text;
+  }
+
   function topbar(extra){
     let meta = "";
     if(state.view==="assessment" && state.run){
       const elapsed = Math.floor((Date.now()-state.run.startedAt)/1000);
-      meta = `<div class="topbar-meta"><span class="timer" id="timerDisplay">${fmtTime(elapsed)}</span><button class="end-link" data-act="end-early">End now</button></div>`;
+      meta = `<div class="topbar-meta"><span class="timer" id="timerDisplay">${fmtTime(elapsed)}</span><button class="btn-quiet" data-act="save-exit" style="padding:4px 2px;">Save &amp; exit</button><button class="end-link" data-act="end-early">End now</button></div>`;
     }
     return `<div class="topbar">
       <button class="brand" data-act="go-roster">
@@ -611,18 +763,87 @@
 
   function render(){
     let body = "";
-    if(state.view==="roster") body = renderRoster();
+    if(state.view==="whoami") body = renderWhoAmI();
+    else if(state.view==="roster") body = renderRoster();
     else if(state.view==="setup") body = renderSetup();
     else if(state.view==="assessment") body = renderAssessment();
     else if(state.view==="report") body = renderReport();
-    appEl.innerHTML = topbar() + body;
+    appEl.innerHTML = (state.view==="whoami" ? topbar("") : topbar()) + body;
     wireEvents();
     if(state.view==="assessment") startTimerTick();
+    if(state.view==="assessment" && state.run) saveDraft();
+  }
+
+  /* ============================== IDENTITY GATE ============================== */
+  function renderWhoAmI(){
+    return `<div class="card" style="max-width:460px;margin:48px auto 0;">
+      <span class="eyebrow">Before you start</span>
+      <h1 style="font-size:1.4rem;margin-top:6px;">Which classroom are you administering for?</h1>
+      <p class="hero-sub" style="margin:8px 0 16px;">This keeps your check-ins separate from other classrooms using this tool.</p>
+      <div class="field full">
+        <label>Classroom</label>
+        <input id="whoamiClassroom" type="text" list="classroomList" placeholder="Start typing or choose your class" autocomplete="off" autofocus>
+        <datalist id="classroomList">
+          ${CLASSROOMS.map(c => `<option value="${esc(c)}">`).join("")}
+        </datalist>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+        <button class="btn btn-primary" data-act="set-classroom">Continue</button>
+      </div>
+      <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:14px;">
+        <button class="btn-quiet" data-act="admin-login" style="padding:0;">Administrator? Enter passcode instead</button>
+      </div>
+    </div>`;
+  }
+
+  function showAdminLogin(){
+    const div = document.createElement("div");
+    div.className = "csv-overlay";
+    div.innerHTML = `<div class="csv-box" style="max-width:360px;">
+      <h3 style="margin-bottom:10px;">Administrator passcode</h3>
+      <div class="field full"><input id="adminPassInput" type="password" placeholder="Passcode"></div>
+      <p class="hero-sub" id="adminError" style="margin-top:10px;color:var(--accent-strong);display:none;">Incorrect passcode.</p>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;">
+        <button class="btn btn-ghost" id="adminCancel">Cancel</button>
+        <button class="btn btn-primary" id="adminSubmit">Unlock</button>
+      </div>
+    </div>`;
+    document.body.appendChild(div);
+    const input = div.querySelector("#adminPassInput");
+    input.focus();
+    const submit = () => {
+      if(input.value === ADMIN_PASSCODE){
+        setAdminUnlocked(true);
+        div.remove();
+        state.view = "roster";
+        render();
+      } else {
+        div.querySelector("#adminError").style.display = "block";
+      }
+    };
+    div.querySelector("#adminSubmit").onclick = submit;
+    input.addEventListener("keydown", e => { if(e.key==="Enter") submit(); });
+    div.querySelector("#adminCancel").onclick = () => div.remove();
+    div.addEventListener("click", e => { if(e.target===div) div.remove(); });
   }
 
   /* ============================== ROSTER ============================== */
   function renderRoster(){
-    const rows = roster.map(rec => {
+    const admin = isAdminUnlocked();
+    const me = getActiveClassroom();
+    const visibleRoster = getVisibleRoster();
+    const identityBar = admin
+      ? `<div class="identity-bar is-admin"><span>Administrator view — showing every classroom's check-ins.</span><button class="btn-quiet" data-act="admin-logout" style="padding:0;">Exit admin view</button></div>`
+      : `<div class="identity-bar"><span>Showing check-ins for classroom <b>${esc(me)}</b>.</span><button class="btn-quiet" data-act="switch-classroom" style="padding:0;">Not your class? Switch</button></div>`;
+    const draft = !admin ? loadDraft(me) : null;
+    const draftBanner = draft ? `<div class="draft-banner">
+        <span><b>Paused check-in:</b> ${esc(draft.child.name)} &middot; saved ${timeAgo(draft.savedAt)}</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" data-act="discard-draft">Discard</button>
+          <button class="btn btn-primary btn-sm" data-act="resume-draft">Resume</button>
+        </div>
+      </div>` : "";
+    const rows = visibleRoster.map(rec => {
       const dateStr = new Date(rec.dateISO).toLocaleDateString(undefined,{ day:"numeric", month:"short", year:"numeric" });
       const minis = DOMAINS.map(d => {
         const r = rec.domainResults && rec.domainResults[d.id];
@@ -632,7 +853,7 @@
       return `<button class="roster-row" data-act="view-record" data-id="${esc(rec._id)}">
         <div>
           <div class="roster-name">${esc(rec.name)}</div>
-          <div class="roster-meta">Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage || "EAL not specified")}</div>
+          <div class="roster-meta">Class ${esc(rec.classroom||"—")} &middot; Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage || "EAL not specified")}</div>
         </div>
         <div class="roster-meta roster-date-col">${dateStr}</div>
         <div class="roster-mini">${minis}</div>
@@ -640,17 +861,17 @@
       </button>`;
     }).join("");
 
-    return `<div class="hero-row">
+    return identityBar + draftBanner + `<div class="hero-row">
         <div>
           <h1>Baseline check-ins</h1>
           <p class="hero-sub">A 10–15 minute, one-to-one screener across maths, literacy, phonics and early skills — built for five-year-old EAL starters. Results are grouped into Emerging, Developing, Meets and Exceeding.</p>
         </div>
         <div class="hero-actions">
-          ${roster.length ? `<button class="btn btn-ghost" data-act="export-csv">${ICON.download} Export all (CSV)</button>` : ""}
+          ${visibleRoster.length ? `<button class="btn btn-ghost" data-act="export-csv">${ICON.download} Export all (CSV)</button>` : ""}
           <button class="btn btn-primary" data-act="new-assessment">+ New assessment</button>
         </div>
       </div>
-      ${roster.length ? `<p class="hero-sub" style="margin-top:-10px;margin-bottom:18px;font-size:.85rem;">“Export all” merges every child on this list into one spreadsheet file — open it directly in Google Sheets (File &rarr; Import &rarr; Upload) or Excel.</p>` : ""}
+      ${visibleRoster.length ? `<p class="hero-sub" style="margin-top:-10px;margin-bottom:18px;font-size:.85rem;">“Export all” merges every child on this list into one spreadsheet file — open it directly in Google Sheets (File &rarr; Import &rarr; Upload) or Excel.</p>` : ""}
       <div class="legend">
         <span><b>Bands:</b></span>
         <span class="legend-item"><span class="swatch" style="background:var(--band-emerging-line)"></span>Emerging</span>
@@ -658,7 +879,7 @@
         <span class="legend-item"><span class="swatch" style="background:var(--band-meets-line)"></span>Meets</span>
         <span class="legend-item"><span class="swatch" style="background:var(--band-exceeding-line)"></span>Exceeding</span>
       </div>
-      ${roster.length ? `<div class="roster-list">${rows}</div>` : `<div class="empty-state">${ICON.empty}<div><b>No check-ins recorded yet.</b><br>Start your first baseline assessment above.</div></div>`}
+      ${visibleRoster.length ? `<div class="roster-list">${rows}</div>` : `<div class="empty-state">${ICON.empty}<div><b>No check-ins recorded yet${admin ? '' : ' for '+esc(me)}.</b><br>Start your first baseline assessment above.</div></div>`}
     `;
   }
 
@@ -674,7 +895,7 @@
           <div class="field"><label>Age</label><input id="f-age" type="text" value="5" placeholder="5"></div>
           <div class="field"><label>Date</label><input id="f-date" type="date" value="${today}"></div>
           <div class="field full"><label>Home language(s) / EAL notes</label><input id="f-lang" type="text" placeholder="e.g. Polish — 4 months in an English setting"></div>
-          <div class="field full"><label>Assessor</label><input id="f-assessor" type="text" placeholder="Your name"></div>
+          <div class="field full"><label>Assessor</label><input id="f-assessor" type="text" placeholder="Your name" value="${esc(getLastAssessorName())}"></div>
         </div>
         <div class="setup-note">${ICON.info}<div>Takes about <b>10–15 minutes</b>, done one-to-one. Have paper and a pencil ready for two short writing checks — everything else runs on screen. You can end early at any point and still get a report on what was covered.</div></div>
         <div style="margin-top:22px;display:flex;justify-content:flex-end;">
@@ -704,7 +925,7 @@
     const domain = currentDomain();
     const pct = Math.round((run.domainIdx / totalSteps) * 100);
     const progress = `<div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div class="section-tag">${domain.icon}<span>Section ${run.domainIdx+1} of ${totalSteps} &middot; ${esc(state.child.name)}</span></div>`;
+      <div class="section-tag">${domain.icon}<span>Section ${run.domainIdx+1} of ${totalSteps} &middot; ${esc(state.child.name)}</span><span class="remaining-note" style="margin-left:auto;">${remainingLabel(run,totalSteps)}</span></div>`;
 
     if(run.phase==="intro"){
       return progress + renderDomainIntro(domain);
@@ -804,11 +1025,14 @@
         }).join("")}
       </div><div class="order-hint">Tap the pictures in the order the story happens. <button class="btn-quiet" data-act="reset-order" style="padding:0;">Reset</button></div>`;
     }
-    const answered = !!(state.run.responses[domain.id] && state.run.responses[domain.id][item.id]);
+    const r = state.run.responses[domain.id] && state.run.responses[domain.id][item.id];
+    const answered = !!(r && (r.correct !== undefined || r.value !== undefined || r.score !== undefined));
+    const showEvidence = item.type==="observe" || item.type==="order";
     return `<div class="card">
       <div class="prompt"><span class="say-cue">Ask the child</span>${esc(item.say)}</div>
       ${visual}
       ${body}
+      ${showEvidence ? renderEvidenceBlock(domain, item) : ""}
       <div class="feedback-row ${state.run._feedback ? (state.run._feedback.ok?'ok':'no') : ''}" id="feedbackRow">${state.run._feedback ? state.run._feedback.text : ""}</div>
       <div class="stage-footer">
         <div class="left-controls">
@@ -854,7 +1078,8 @@
   function recordObserve(domain, item, idx){
     const opt = item.options[idx];
     state.run.responses[domain.id] = state.run.responses[domain.id] || {};
-    state.run.responses[domain.id][item.id] = { value: opt.value };
+    const existing = state.run.responses[domain.id][item.id] || {};
+    state.run.responses[domain.id][item.id] = Object.assign({}, existing, { value: opt.value });
     state.run._feedback = { ok:true, text:"Recorded." };
     render();
   }
@@ -868,10 +1093,35 @@
       item.correctOrder.forEach((k,i)=>{ if(state.run.orderTemp[i]===k) matches++; });
       const score = matches/item.cards.length;
       state.run.responses[domain.id] = state.run.responses[domain.id] || {};
-      state.run.responses[domain.id][item.id] = { score, order: state.run.orderTemp.slice() };
+      const existing = state.run.responses[domain.id][item.id] || {};
+      state.run.responses[domain.id][item.id] = Object.assign({}, existing, { score, order: state.run.orderTemp.slice() });
       state.run._feedback = score===1 ? { ok:true, text:"Order recorded — matches the story!" } : { ok:false, text:`Order recorded — ${matches}/${item.cards.length} in the right place.` };
     }
     render();
+  }
+
+  function addEvidenceToItem(domainId, itemId, entry){
+    state.run.responses[domainId] = state.run.responses[domainId] || {};
+    const existing = state.run.responses[domainId][itemId] || {};
+    const evidence = (existing.evidence || []).concat([entry]);
+    state.run.responses[domainId][itemId] = Object.assign({}, existing, { evidence });
+  }
+  function removeEvidenceFromItem(domainId, itemId, evidenceId){
+    const existing = state.run.responses[domainId] && state.run.responses[domainId][itemId];
+    if(!existing || !existing.evidence) return;
+    existing.evidence = existing.evidence.filter(ev => ev.id !== evidenceId);
+    deleteEvidenceBlob(evidenceId);
+  }
+  function renderEvidenceBlock(domain, item){
+    const existing = (state.run.responses[domain.id] && state.run.responses[domain.id][item.id] && state.run.responses[domain.id][item.id].evidence) || [];
+    const chips = existing.map(ev => `<span class="evidence-chip" data-act="view-evidence" data-evidence-id="${ev.id}">
+        ${ev.type && ev.type.startsWith("video") ? "🎥" : "📷"} ${esc(ev.name || "evidence")}
+        <button type="button" class="evidence-remove" data-act="remove-evidence" data-domain="${domain.id}" data-item="${item.id}" data-evidence-id="${ev.id}">&times;</button>
+      </span>`).join("");
+    return `<div class="evidence-block">
+      <button type="button" class="btn btn-ghost btn-sm" data-act="capture-evidence" data-domain="${domain.id}" data-item="${item.id}">${ICON.camera} Add photo / video evidence</button>
+      <div class="evidence-thumbs">${chips}</div>
+    </div>`;
   }
 
   function goNextItem(){
@@ -923,15 +1173,28 @@
   async function finishAssessment(){
     if(state._timerHandle) clearInterval(state._timerHandle);
     const results = buildResults(state.run);
+    const evidence = {};
+    DOMAINS.forEach(d => {
+      if(d.kind==="gridcheck") return;
+      const resp = (state.run.responses && state.run.responses[d.id]) || {};
+      d.items.forEach(item => {
+        const r = resp[item.id];
+        if(r && r.evidence && r.evidence.length){
+          evidence[d.id+"."+item.id] = { domainName: d.name, itemSay: item.say, files: r.evidence };
+        }
+      });
+    });
     const record = {
       name: state.child.name, age: state.child.age, homeLanguage: state.child.homeLanguage,
-      assessor: state.child.assessor, dateISO: state.child.dateISO,
+      assessor: state.child.assessor, classroom: state.child.classroom || "", dateISO: state.child.dateISO,
       durationSeconds: Math.floor((Date.now()-state.run.startedAt)/1000),
       domainResults: results.domainResults, overallPct: results.overallPct, overallBand: results.overallBand,
       domainNotes: state.run.notes || {}, overallComment: state.run.overallComment || "",
-      handedness: state.run.handedness || "", pencilGrip: state.run.pencilGrip || "", posture: state.run.posture || ""
+      handedness: state.run.handedness || "", pencilGrip: state.run.pencilGrip || "", posture: state.run.posture || "",
+      evidence
     };
     const id = await persistRecord(record);
+    clearDraft(state.child.classroom || getActiveClassroom());
     state.viewingRecord = Object.assign({ _id:id }, record);
     state.view = "report";
     state.run = null;
@@ -999,7 +1262,7 @@
         <div>
           <span class="eyebrow">Baseline report</span>
           <h1 style="font-size:1.6rem;margin-top:4px;">${esc(rec.name)}</h1>
-          <p class="hero-sub" style="margin-top:4px;">Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage||"EAL not specified")} &middot; ${dateStr} &middot; Assessor: ${esc(rec.assessor||"—")}</p>
+          <p class="hero-sub" style="margin-top:4px;">Class ${esc(rec.classroom||"—")} &middot; Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage||"EAL not specified")} &middot; ${dateStr} &middot; Assessor: ${esc(rec.assessor||"—")}</p>
         </div>
         <div class="report-overall">
           <div class="overall-badge band-${rec.overallBand}" style="border-color:${BAND_BAR_COLOR[rec.overallBand]}">
@@ -1015,6 +1278,15 @@
         ${rec.posture?`<span class="info-chip">Posture: ${esc(rec.posture)}</span>`:""}
       </div></div>` : ""}
       ${rec.overallComment ? `<div style="margin-top:16px;"><span class="eyebrow">Overall comment</span><p style="margin-top:6px;line-height:1.55;">${esc(rec.overallComment)}</p></div>` : ""}
+      ${rec.evidence && Object.keys(rec.evidence).length ? `<div style="margin-top:18px;"><span class="eyebrow">Photo / video evidence</span>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+          ${Object.values(rec.evidence).map(group => `<div>
+            <div class="dr-detail" style="margin-bottom:4px;"><b>${esc(group.domainName)}</b> — ${esc(group.itemSay)}</div>
+            <div class="evidence-thumbs">${group.files.map(ev => `<span class="evidence-chip" data-act="view-evidence" data-evidence-id="${ev.id}">${ev.type && ev.type.startsWith("video") ? "🎥" : "📷"} ${esc(ev.name||"evidence")}</span>`).join("")}</div>
+          </div>`).join("")}
+        </div>
+        <p class="hero-sub" style="margin-top:8px;font-size:.8rem;">Evidence only opens on the device that captured it.</p>
+      </div>` : ""}
       <div class="report-actions">
         <button class="btn btn-primary" data-act="new-assessment">+ New assessment</button>
         <button class="btn btn-ghost" data-act="print-report">${ICON.printer} Print / save PDF</button>
@@ -1025,12 +1297,12 @@
 
   /* ============================== CSV EXPORT ============================== */
   function buildCSV(){
-    const header = ["Name","Age","Home language","Assessor","Date",
+    const header = ["Name","Classroom","Age","Home language","Assessor","Date",
       ...DOMAINS.flatMap(d=>[d.name+" %", d.name+" band"]),
       "Overall %","Overall band","Handedness","Pencil grip","Posture","Overall comment"];
     const lines = [header];
-    roster.forEach(rec=>{
-      const row = [rec.name, rec.age||"", rec.homeLanguage||"", rec.assessor||"", rec.dateISO ? rec.dateISO.slice(0,10) : ""];
+    getVisibleRoster().forEach(rec=>{
+      const row = [rec.name, rec.classroom||"", rec.age||"", rec.homeLanguage||"", rec.assessor||"", rec.dateISO ? rec.dateISO.slice(0,10) : ""];
       DOMAINS.forEach(d=>{
         const r = rec.domainResults && rec.domainResults[d.id];
         row.push(r && r.pct!==null ? r.pct : "", r ? r.band : "");
@@ -1102,22 +1374,48 @@
     const domain = state.run ? currentDomain() : null;
     const item = domain && domain.kind!=="gridcheck" ? domain.items[state.run.itemIdx] : null;
     switch(act){
-      case "go-roster": state.view="roster"; state.run=null; render(); break;
+      case "go-roster": {
+        if(!getActiveClassroom() && !isAdminUnlocked()){ state.view = "whoami"; }
+        else { state.view = "roster"; state.run = null; }
+        render();
+        break;
+      }
       case "new-assessment": state.view="setup"; render(); break;
       case "begin-assessment": beginAssessment(); break;
       case "view-record": {
         const id = e.currentTarget.dataset.id;
-        const rec = roster.find(r => r._id===id);
+        const rec = getVisibleRoster().find(r => r._id===id);
         if(rec){ state.viewingRecord = rec; state.view="report"; render(); }
         break;
       }
       case "export-csv": exportCSV(); break;
+      case "set-classroom": {
+        const cls = document.getElementById("whoamiClassroom").value.trim();
+        if(!cls) return;
+        setActiveClassroom(cls);
+        state.view = "roster";
+        render();
+        break;
+      }
+      case "admin-login": showAdminLogin(); break;
+      case "switch-classroom": clearActiveClassroom(); state.view = "whoami"; render(); break;
+      case "admin-logout": setAdminUnlocked(false); state.view = "whoami"; render(); break;
       case "begin-domain": state.run.phase = domain.kind==="gridcheck" ? "grid-done" : "items"; render(); break;
       case "prev-domain": prevDomain(); break;
       case "pick-select": recordSelect(domain, item, +e.currentTarget.dataset.idx); break;
       case "pick-observe": recordObserve(domain, item, +e.currentTarget.dataset.idx); break;
       case "pick-order": pickOrderCard(domain, item, e.currentTarget.dataset.key); break;
-      case "reset-order": state.run.orderTemp = []; state.run.responses[domain.id] && delete state.run.responses[domain.id][item.id]; state.run._feedback=null; render(); break;
+      case "reset-order": {
+        state.run.orderTemp = [];
+        const existingOrder = state.run.responses[domain.id] && state.run.responses[domain.id][item.id];
+        if(existingOrder){
+          delete existingOrder.score; delete existingOrder.order;
+          if(!existingOrder.evidence || !existingOrder.evidence.length) delete state.run.responses[domain.id][item.id];
+        }
+        state.run._feedback = null;
+        render();
+        break;
+      }
       case "next-item": goNextItem(); break;
       case "prev-item": prevItem(); break;
       case "skip-item": skipItem(); break;
@@ -1142,6 +1440,61 @@
       }
       case "end-early": endEarly(); break;
       case "print-report": window.print(); break;
+      case "save-exit": {
+        if(domain) saveDomainNoteFromDOM(domain.id);
+        saveOverallCommentFromDOM();
+        saveDraft();
+        state.view = "roster";
+        state.run = null;
+        state.child = null;
+        render();
+        break;
+      }
+      case "resume-draft": {
+        const draft = loadDraft(getActiveClassroom());
+        if(draft){ state.child = draft.child; state.run = draft.run; state.view = "assessment"; }
+        render();
+        break;
+      }
+      case "discard-draft": clearDraft(getActiveClassroom()); render(); break;
+      case "capture-evidence": {
+        const domainId = e.currentTarget.dataset.domain, itemId = e.currentTarget.dataset.item;
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*,video/*";
+        input.capture = "environment";
+        input.multiple = true;
+        input.onchange = async () => {
+          for(const file of Array.from(input.files || [])){
+            const id = "ev-" + Date.now() + "-" + Math.random().toString(36).slice(2,8);
+            try{
+              await saveEvidenceBlob(id, file);
+              addEvidenceToItem(domainId, itemId, { id, type: file.type, name: file.name, capturedAt: Date.now() });
+            }catch(err){ /* skip this file, keep going */ }
+          }
+          render();
+        };
+        input.click();
+        break;
+      }
+      case "remove-evidence": {
+        e.stopPropagation();
+        const domainId = e.currentTarget.dataset.domain, itemId = e.currentTarget.dataset.item, evId = e.currentTarget.dataset.evidenceId;
+        removeEvidenceFromItem(domainId, itemId, evId);
+        render();
+        break;
+      }
+      case "view-evidence": {
+        const evId = e.currentTarget.dataset.evidenceId;
+        getEvidenceBlob(evId).then(blob => {
+          if(blob){
+            window.open(URL.createObjectURL(blob), "_blank");
+          } else {
+            showConfirm("This evidence was captured on a different device and isn't stored here.", ()=>{}, { title:"Not available on this device", confirmLabel:"OK", cancelLabel:"OK" });
+          }
+        });
+        break;
+      }
     }
   }
 
@@ -1162,14 +1515,17 @@
       age: document.getElementById("f-age").value.trim() || "5",
       dateISO: new Date(document.getElementById("f-date").value || Date.now()).toISOString(),
       homeLanguage: document.getElementById("f-lang").value.trim(),
-      assessor: document.getElementById("f-assessor").value.trim()
+      assessor: document.getElementById("f-assessor").value.trim(),
+      classroom: getActiveClassroom()
     };
+    if(state.child.assessor) setLastAssessorName(state.child.assessor);
     state.run = { domainIdx:0, itemIdx:0, phase:"intro", responses:{}, grid:{}, orderTemp:[], notes:{}, overallComment:"", handedness:"", pencilGrip:"", posture:"", startedAt:Date.now(), _feedback:null };
     state.view = "assessment";
     render();
   }
 
   /* ============================== BOOT ============================== */
+  if(!getActiveClassroom() && !isAdminUnlocked()) state.view = "whoami";
   render();
   initCapabilities();
 })();
