@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%B1%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Early Years Baseline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@500;600;700;800&display=swap">
@@ -426,7 +425,10 @@
     { key:"posture", label:"Posture", options:["Sits well","Some support needed","Struggles to stay seated"] }
   ];
 
-  const DOMAINS = [
+  const DIGRAPH_LETTERS = ["sh","ch","th","ng","ai","ee","igh","oa","oo","ar"];
+
+  /* ============================== FS2 (Children in Reception, 4-5) — the baseline test ============================== */
+  const DOMAINS_FS2 = [
     {
       id:"numbers", name:"Number recognition & formation", icon:ICON.numbers,
       say:"Show two or three number cards (or point along a number line). Ask the child to point to the number you say.",
@@ -434,7 +436,7 @@
       items:[
         { id:"n1", type:"select", say:"Can you point to the number 3?", options:[{label:"3",correct:true},{label:"8"},{label:"5"}] },
         { id:"n2", type:"select", say:"Can you point to the number 8?", options:[{label:"8",correct:true},{label:"6"},{label:"3"}] },
-        { id:"n3", type:"select", say:"Can you point to the number 12?", options:[{label:"21"},{label:"12",correct:true},{label:"2"}] },
+        { id:"n3", type:"select", say:"Can you point to the number 10?", options:[{label:"10",correct:true},{label:"6"},{label:"1"}] },
         { id:"n4", type:"observe", say:"Ask the child to write the numbers 1 to 5 on paper.", options:[
           {label:"Not yet forming numbers",value:0}, {label:"Forms some numbers (1–5)",value:0.5}, {label:"Forms numbers 1–10 confidently",value:1}
         ]}
@@ -456,11 +458,15 @@
       say:"Point to each group as you read the question. Give the child a moment to count aloud or with a finger.",
       materials:"No extra materials needed.",
       items:[
-        { id:"m1", type:"select", say:"Which plate has 4 strawberries?", options:[{label:countGroup("🍓",6)},{label:countGroup("🍓",4),correct:true},{label:countGroup("🍓",3)}] },
-        { id:"m2", type:"select", say:"Which bowl has more grapes?", options:[{label:countGroup("🍇",3)},{label:countGroup("🍇",6),correct:true}] },
-        { id:"m3", type:"select", say:"Here are 2 fish, and 1 more fish. How many fish now?",
-          visual: countGroup("🐟",2) + `<div style="font-family:'Fraunces';font-size:1.4rem;font-weight:600;margin:0 6px;align-self:center;">+</div>` + countGroup("🐟",1),
-          options:[{label:"2"},{label:"4"},{label:"3",correct:true}] }
+        { id:"m1", type:"select", say:"Which plate has 4 strawberries?", options:[{label:countGroup("🍓",3)},{label:countGroup("🍓",4),correct:true},{label:countGroup("🍓",6)}] },
+        { id:"m2", type:"select", say:"Which plate has 2 apples?", options:[{label:countGroup("🍎",2),correct:true},{label:countGroup("🍎",5)},{label:countGroup("🍎",7)}] },
+        { id:"m3", type:"select", say:"Which plate has 6 bananas?", options:[{label:countGroup("🍌",6),correct:true},{label:countGroup("🍌",3)},{label:countGroup("🍌",9)}] },
+        { id:"m4", type:"select", say:"Which bowl has more grapes?", options:[{label:countGroup("🍇",3)},{label:countGroup("🍇",6),correct:true}] },
+        { id:"m5", type:"select", say:"Which bowl has more oranges?", options:[{label:countGroup("🍊",4)},{label:countGroup("🍊",9),correct:true}] },
+        { id:"m6", type:"select", say:"Which bowl has more pears?", options:[{label:countGroup("🍐",2)},{label:countGroup("🍐",8),correct:true}] },
+        { id:"m7", type:"select", say:"Which bowl has fewer cherries?", options:[{label:countGroup("🍒",8)},{label:countGroup("🍒",2),correct:true}] },
+        { id:"m8", type:"select", say:"Which bowl has fewer watermelons?", options:[{label:countGroup("🍉",6)},{label:countGroup("🍉",3),correct:true}] },
+        { id:"m9", type:"select", say:"Which bowl has fewer peaches?", options:[{label:countGroup("🍑",9)},{label:countGroup("🍑",4),correct:true}] }
       ]
     },
     {
@@ -518,6 +524,220 @@
       letters: PHONICS_LETTERS
     }
   ];
+
+  /* ============================== FS1 (3&4-year-olds, 3-4) — simplified, no phonics ============================== */
+  const DOMAINS_FS1 = [
+    {
+      id:"numbers", name:"Number recognition & formation", icon:ICON.numbers,
+      say:"Show two or three number cards (or point along a number line). Ask the child to point to the number you say.",
+      materials:"Number cards or a number line, plus paper &amp; pencil for the formation check.",
+      items:[
+        { id:"n1", type:"select", say:"Can you point to the number 2?", options:[{label:"2",correct:true},{label:"4"},{label:"1"}] },
+        { id:"n2", type:"select", say:"Can you point to the number 5?", options:[{label:"5",correct:true},{label:"3"},{label:"2"}] },
+        { id:"n3", type:"observe", say:"Ask the child to write or copy the numbers 1 to 3 on paper.", options:[
+          {label:"Not yet forming numbers",value:0}, {label:"Attempts marks",value:0.5}, {label:"Forms recognisable numbers",value:1}
+        ]}
+      ]
+    },
+    {
+      id:"maths", name:"Maths (counting & comparing)", icon:ICON.maths,
+      say:"Point to each group as you read the question. Give the child time to count with a finger.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"m1", type:"select", say:"Which plate has 3 apples?", options:[{label:countGroup("🍎",1)},{label:countGroup("🍎",3),correct:true},{label:countGroup("🍎",5)}] },
+        { id:"m2", type:"select", say:"Which bowl has more grapes?", options:[{label:countGroup("🍇",2)},{label:countGroup("🍇",4),correct:true}] },
+        { id:"m3", type:"select", say:"Which bowl has fewer strawberries?", options:[{label:countGroup("🍓",4)},{label:countGroup("🍓",1),correct:true}] }
+      ]
+    },
+    {
+      id:"shapes", name:"2D shapes", icon:ICON.shapes,
+      say:"Show the shapes on screen and ask the child to point to the one you name.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sh1", type:"select", say:"Can you point to the circle?", options:[{label:shapeSVG("circle"),correct:true},{label:shapeSVG("square")},{label:shapeSVG("triangle")}] },
+        { id:"sh2", type:"select", say:"Can you point to the square?", options:[{label:shapeSVG("triangle")},{label:shapeSVG("square"),correct:true},{label:shapeSVG("circle")}] },
+        { id:"sh3", type:"select", say:"Can you point to the triangle?", options:[{label:shapeSVG("circle")},{label:shapeSVG("triangle"),correct:true},{label:shapeSVG("square")}] }
+      ]
+    },
+    {
+      id:"spatial", name:"Spatial awareness", icon:ICON.spatial,
+      say:"Point to each little picture as you describe it, then ask the child to choose.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sp1", type:"select", say:"Which picture shows the ball UNDER the box?", options:[{label:scene("on")},{label:scene("under"),correct:true},{label:scene("next-to")}] }
+      ]
+    },
+    {
+      id:"sequencing", name:"Sequencing (patterns)", icon:ICON.sequence,
+      say:"Read the pattern aloud left to right, then ask what comes next.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sq1", type:"select", say:"What comes next in this pattern?",
+          visual: patternRow([{size:34,color:"var(--accent)"},{size:34,color:"var(--accent-2)"},{size:34,color:"var(--accent)"},{size:34,color:"var(--accent-2)"},{size:34,color:"var(--accent)"}]),
+          options:[{label:dotSwatch(44,"var(--accent)")},{label:dotSwatch(44,"var(--accent-2)"),correct:true},{label:dotSwatch(44,"var(--ink-soft)")}] }
+      ]
+    },
+    {
+      id:"story", name:"Story sequencing", icon:ICON.story,
+      say:"Mix the pictures up (they already are). Ask the child to tap them in the order the story happens.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"st1", type:"order", say:"Put these pictures in order: what happens first, then next?",
+          cards:[{key:"school",emoji:"🎒",label:"Go to school"},{key:"wake",emoji:"🛏️",label:"Wake up"}],
+          correctOrder:["wake","school"] }
+      ]
+    },
+    {
+      id:"literacy", name:"Literacy (print awareness & mark-making)", icon:ICON.literacy,
+      say:"These check early print awareness, not letter names — no letters are shown to the child.",
+      materials:"A book, plus paper &amp; pencil for the name-writing check.",
+      items:[
+        { id:"l1", type:"observe", say:"Show the child a book. Do they hold it the right way up and know we read left to right?", options:[
+          {label:"Not yet",value:0}, {label:"With a hint",value:0.5}, {label:"Yes, independently",value:1}
+        ]},
+        { id:"l2", type:"observe", say:"Ask the child to write or attempt their own name.", options:[
+          {label:"Not yet attempting",value:0}, {label:"Attempts some marks or letters",value:0.5}, {label:"Recognisable attempt",value:1}
+        ]}
+      ]
+    },
+    {
+      id:"phonological", name:"Phonological awareness", icon:ICON.phonics,
+      say:"Say each word clearly yourself — no letters are shown, this checks listening skills, not reading.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"ph1", type:"select", say:"Does “cat” rhyme with this, or this?", options:[{label:"🎩",correct:true},{label:"☀️"}] },
+        { id:"ph2", type:"select", say:"Say “cat” and “banana” — which one has more parts when we clap it?", options:[{label:"🐱"},{label:"🍌",correct:true}] },
+        { id:"ph3", type:"select", say:"Does “sun” start with the same sound as this, or this?", options:[{label:"🧦",correct:true},{label:"🐱"}] }
+      ]
+    }
+  ];
+
+  /* ============================== Kinder (Early Learning Goals, 5-6) — builds on FS2 ============================== */
+  const DOMAINS_KINDER = [
+    {
+      id:"numbers", name:"Number recognition & formation", icon:ICON.numbers,
+      say:"Show two or three number cards (or point along a number line). Ask the child to point to the number you say.",
+      materials:"Number cards or a number line, plus paper &amp; pencil for the formation check.",
+      items:[
+        { id:"n1", type:"select", say:"Can you point to the number 8?", options:[{label:"8",correct:true},{label:"3"},{label:"6"}] },
+        { id:"n2", type:"select", say:"Can you point to the number 14?", options:[{label:"14",correct:true},{label:"41"},{label:"4"}] },
+        { id:"n3", type:"select", say:"Can you point to the number 20?", options:[{label:"20",correct:true},{label:"12"},{label:"2"}] },
+        { id:"n4", type:"observe", say:"Ask the child to write the numbers 1 to 5 on paper.", options:[
+          {label:"Not yet forming numbers",value:0}, {label:"Forms some numbers (1–5)",value:0.5}, {label:"Forms numbers 1–10 confidently",value:1}
+        ]}
+      ]
+    },
+    {
+      id:"shapes", name:"2D shapes", icon:ICON.shapes,
+      say:"Show the three shapes on screen and ask the child to point to the one you name.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sh1", type:"select", say:"Can you point to the circle?", options:[{label:shapeSVG("circle"),correct:true},{label:shapeSVG("oval")},{label:shapeSVG("star")}] },
+        { id:"sh2", type:"select", say:"Can you point to the square?", options:[{label:shapeSVG("triangle")},{label:shapeSVG("square"),correct:true},{label:shapeSVG("rectangle")}] },
+        { id:"sh3", type:"select", say:"Can you point to the triangle?", options:[{label:shapeSVG("star")},{label:shapeSVG("circle")},{label:shapeSVG("triangle"),correct:true}] },
+        { id:"sh4", type:"select", say:"Can you point to the rectangle?", options:[{label:shapeSVG("rectangle"),correct:true},{label:shapeSVG("square")},{label:shapeSVG("triangle")}] }
+      ]
+    },
+    {
+      id:"maths", name:"Maths (counting & comparing)", icon:ICON.maths,
+      say:"Point to each group as you read the question. Give the child a moment to count aloud or with a finger.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"m1", type:"select", say:"Which plate has 4 strawberries?", options:[{label:countGroup("🍓",3)},{label:countGroup("🍓",4),correct:true},{label:countGroup("🍓",6)}] },
+        { id:"m2", type:"select", say:"Which plate has 2 apples?", options:[{label:countGroup("🍎",2),correct:true},{label:countGroup("🍎",5)},{label:countGroup("🍎",7)}] },
+        { id:"m3", type:"select", say:"Which plate has 6 bananas?", options:[{label:countGroup("🍌",6),correct:true},{label:countGroup("🍌",3)},{label:countGroup("🍌",9)}] },
+        { id:"m4", type:"select", say:"Which bowl has more grapes?", options:[{label:countGroup("🍇",3)},{label:countGroup("🍇",6),correct:true}] },
+        { id:"m5", type:"select", say:"Which bowl has more oranges?", options:[{label:countGroup("🍊",4)},{label:countGroup("🍊",9),correct:true}] },
+        { id:"m6", type:"select", say:"Which bowl has more pears?", options:[{label:countGroup("🍐",2)},{label:countGroup("🍐",8),correct:true}] },
+        { id:"m7", type:"select", say:"Which bowl has fewer cherries?", options:[{label:countGroup("🍒",8)},{label:countGroup("🍒",2),correct:true}] },
+        { id:"m8", type:"select", say:"Which bowl has fewer watermelons?", options:[{label:countGroup("🍉",6)},{label:countGroup("🍉",3),correct:true}] },
+        { id:"m9", type:"select", say:"Which bowl has fewer peaches?", options:[{label:countGroup("🍑",9)},{label:countGroup("🍑",4),correct:true}] },
+        { id:"m10", type:"select", say:"5 take away 2 — how many are left?", options:[{label:"2"},{label:"3",correct:true},{label:"4"}] },
+        { id:"m11", type:"select", say:"Double 3 — how many is that?", options:[{label:"5"},{label:"6",correct:true},{label:"7"}] }
+      ]
+    },
+    {
+      id:"spatial", name:"Spatial awareness", icon:ICON.spatial,
+      say:"Point to each little picture as you describe it, then ask the child to choose.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sp1", type:"select", say:"Which picture shows the ball UNDER the box?", options:[{label:scene("on")},{label:scene("under"),correct:true},{label:scene("next-to")}] },
+        { id:"sp2", type:"select", say:"Which picture shows the ball BETWEEN the two boxes?", options:[{label:scene("beside-a")},{label:scene("between"),correct:true},{label:scene("beside-b")}] }
+      ]
+    },
+    {
+      id:"sequencing", name:"Sequencing (patterns)", icon:ICON.sequence,
+      say:"Read the pattern aloud left to right, then ask what comes next.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"sq1", type:"select", say:"What comes next in this pattern?",
+          visual: patternRow([{size:34,color:"var(--accent)"},{size:34,color:"var(--accent-2)"},{size:34,color:"var(--accent)"},{size:34,color:"var(--accent-2)"},{size:34,color:"var(--accent)"}]),
+          options:[{label:dotSwatch(44,"var(--accent)")},{label:dotSwatch(44,"var(--accent-2)"),correct:true},{label:dotSwatch(44,"var(--ink-soft)")}] },
+        { id:"sq2", type:"select", say:"What size comes next — small, big, small, big...?",
+          visual: patternRow([{size:18,color:"var(--ink-soft)"},{size:34,color:"var(--ink-soft)"},{size:18,color:"var(--ink-soft)"},{size:34,color:"var(--ink-soft)"}]),
+          options:[{label:dotSwatch(18,"var(--ink-soft)"),correct:true},{label:dotSwatch(34,"var(--ink-soft)")},{label:dotSwatch(50,"var(--ink-soft)")}] }
+      ]
+    },
+    {
+      id:"story", name:"Story sequencing", icon:ICON.story,
+      say:"Mix the pictures up (they already are). Ask the child to tap them in the order the story happens.",
+      materials:"No extra materials needed.",
+      items:[
+        { id:"st1", type:"order", say:"Put these pictures in order: a plant growing.",
+          cards:[{key:"bud",emoji:"🌿",label:"Bud"},{key:"sprout",emoji:"🌱",label:"Sprout"},{key:"flower",emoji:"🌻",label:"Flower"},{key:"seed",emoji:"🌰",label:"Seed"}],
+          correctOrder:["seed","sprout","bud","flower"] },
+        { id:"st2", type:"order", say:"Put these pictures in order: getting ready for school.",
+          cards:[{key:"teeth",emoji:"🪥",label:"Brush teeth"},{key:"school",emoji:"🎒",label:"Go to school"},{key:"wake",emoji:"🛏️",label:"Wake up"},{key:"dressed",emoji:"👕",label:"Get dressed"}],
+          correctOrder:["wake","dressed","teeth","school"] }
+      ]
+    },
+    {
+      id:"literacy", name:"Literacy (letters & mark-making)", icon:ICON.literacy,
+      say:"Show the options and ask the child to point to the one you name.",
+      materials:"Paper &amp; pencil for the name-writing check.",
+      items:[
+        { id:"l1", type:"select", say:"Can you point to the letter S?", options:[{label:"C"},{label:"S",correct:true},{label:"E"}] },
+        { id:"l2", type:"select", say:"Can you point to the letter m?", options:[{label:"w"},{label:"n"},{label:"m",correct:true}] },
+        { id:"l3", type:"select", say:"Can you point to the letter b?", options:[{label:"d"},{label:"b",correct:true},{label:"p"}] },
+        { id:"l4", type:"select", say:"Can you point to the word “cat”?", options:[{label:"cat",correct:true},{label:"dog"},{label:"sun"}] },
+        { id:"l5", type:"observe", say:"Ask the child to write their own name.", options:[
+          {label:"Not yet attempting",value:0}, {label:"Attempts some letters",value:0.5}, {label:"Writes it confidently",value:1}
+        ]}
+      ]
+    },
+    {
+      id:"phonics", name:"Phonics — letter sounds", icon:ICON.phonics, kind:"gridcheck",
+      say:"Point to each letter in turn and ask, “What sound does this letter make?” Tap once for a correct sound, twice for not-yet, a third time to clear it.",
+      materials:"No extra materials needed. Covers the 25 single-letter sounds you're screening for, plus the qu digraph.",
+      letters: PHONICS_LETTERS
+    },
+    {
+      id:"digraphs", name:"Phonics — digraphs", icon:ICON.phonics, kind:"gridcheck",
+      say:"Point to each letter pair in turn and ask, “What sound does this make?” Tap once for correct, twice for not-yet, a third time to clear it.",
+      materials:"No extra materials needed. Covers 10 common digraphs.",
+      letters: DIGRAPH_LETTERS
+    }
+  ];
+
+  function yearGroupFromClassroom(cls){
+    const c = (cls||"").trim().toUpperCase();
+    if(c.startsWith("FS1")) return "FS1";
+    if(c.startsWith("FS2")) return "FS2";
+    if(c.startsWith("K")) return "Kinder";
+    return "FS2";
+  }
+  function domainsFor(yearGroup){
+    if(yearGroup==="FS1") return DOMAINS_FS1;
+    if(yearGroup==="Kinder") return DOMAINS_KINDER;
+    return DOMAINS_FS2;
+  }
+  const ALL_DOMAINS_UNION = (function(){
+    const seen = new Map();
+    [DOMAINS_FS1, DOMAINS_FS2, DOMAINS_KINDER].forEach(set => {
+      set.forEach(d => { if(!seen.has(d.id)) seen.set(d.id, d); });
+    });
+    return Array.from(seen.values());
+  })();
 
   /* ============================== STATE ============================== */
   const FIREBASE_CONFIG = {
@@ -686,7 +906,7 @@
   /* ============================== SCORING ============================== */
   function buildResults(run){
     const domainResults = {};
-    DOMAINS.forEach(d => {
+    domainsFor(run.yearGroup).forEach(d => {
       if(d.kind==="gridcheck"){
         const marks = run.grid || {};
         const letters = d.letters;
@@ -782,10 +1002,10 @@
       <p class="hero-sub" style="margin:8px 0 16px;">This keeps your check-ins separate from other classrooms using this tool.</p>
       <div class="field full">
         <label>Classroom</label>
-        <input id="whoamiClassroom" type="text" list="classroomList" placeholder="Start typing or choose your class" autocomplete="off" autofocus>
-        <datalist id="classroomList">
-          ${CLASSROOMS.map(c => `<option value="${esc(c)}">`).join("")}
-        </datalist>
+        <select id="whoamiClassroom" autofocus>
+          <option value="" disabled selected>Choose your class&hellip;</option>
+          ${CLASSROOMS.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+        </select>
       </div>
       <div style="display:flex;justify-content:flex-end;margin-top:16px;">
         <button class="btn btn-primary" data-act="set-classroom">Continue</button>
@@ -845,7 +1065,7 @@
       </div>` : "";
     const rows = visibleRoster.map(rec => {
       const dateStr = new Date(rec.dateISO).toLocaleDateString(undefined,{ day:"numeric", month:"short", year:"numeric" });
-      const minis = DOMAINS.map(d => {
+      const minis = domainsFor(yearGroupFromClassroom(rec.classroom)).map(d => {
         const r = rec.domainResults && rec.domainResults[d.id];
         const band = r ? r.band : "None";
         return `<i style="background:${BAND_BAR_COLOR[band]}" title="${d.name}: ${band}"></i>`;
@@ -864,7 +1084,7 @@
     return identityBar + draftBanner + `<div class="hero-row">
         <div>
           <h1>Baseline check-ins</h1>
-          <p class="hero-sub">A 10–15 minute, one-to-one screener across maths, literacy, phonics and early skills — built for five-year-old EAL starters. Results are grouped into Emerging, Developing, Meets and Exceeding.</p>
+          <p class="hero-sub">A one-to-one screener across maths, literacy, phonics and early skills, age-matched to FS1, FS2 and Kinder for EAL starters. Results are grouped into Emerging, Developing, Meets and Exceeding.</p>
         </div>
         <div class="hero-actions">
           ${visibleRoster.length ? `<button class="btn btn-ghost" data-act="export-csv">${ICON.download} Export all (CSV)</button>` : ""}
@@ -897,7 +1117,7 @@
           <div class="field full"><label>Home language(s) / EAL notes</label><input id="f-lang" type="text" placeholder="e.g. Polish — 4 months in an English setting"></div>
           <div class="field full"><label>Assessor</label><input id="f-assessor" type="text" placeholder="Your name" value="${esc(getLastAssessorName())}"></div>
         </div>
-        <div class="setup-note">${ICON.info}<div>Takes about <b>10–15 minutes</b>, done one-to-one. Have paper and a pencil ready for two short writing checks — everything else runs on screen. You can end early at any point and still get a report on what was covered.</div></div>
+        <div class="setup-note">${ICON.info}<div>Takes about <b>10–20 minutes</b> depending on the child's year group, done one-to-one. Have paper and a pencil ready for the writing checks — everything else runs on screen. The right test (FS1, FS2 or Kinder) loads automatically from the classroom you picked earlier. You can end early at any point and still get a report on what was covered.</div></div>
         <div style="margin-top:22px;display:flex;justify-content:flex-end;">
           <button class="btn btn-primary" data-act="begin-assessment">Start assessment</button>
         </div>
@@ -914,11 +1134,11 @@
     }, 1000);
   }
 
-  function currentDomain(){ return DOMAINS[state.run.domainIdx]; }
+  function currentDomain(){ return domainsFor(state.run.yearGroup)[state.run.domainIdx]; }
 
   function renderAssessment(){
     const run = state.run;
-    const totalSteps = DOMAINS.length;
+    const totalSteps = domainsFor(run.yearGroup).length;
     if(run.domainIdx >= totalSteps){
       return `<div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>` + renderOverallComment();
     }
@@ -1145,14 +1365,15 @@
     else { state.run.phase="intro"; render(); }
   }
   function advanceDomain(){
-    if(state.run.domainIdx < DOMAINS.length-1){
+    const total = domainsFor(state.run.yearGroup).length;
+    if(state.run.domainIdx < total-1){
       state.run.domainIdx++;
       state.run.itemIdx = 0;
       state.run.phase = "intro";
       state.run.orderTemp = [];
       render();
     } else {
-      state.run.domainIdx = DOMAINS.length;
+      state.run.domainIdx = total;
       render();
     }
   }
@@ -1174,7 +1395,7 @@
     if(state._timerHandle) clearInterval(state._timerHandle);
     const results = buildResults(state.run);
     const evidence = {};
-    DOMAINS.forEach(d => {
+    domainsFor(state.run.yearGroup).forEach(d => {
       if(d.kind==="gridcheck") return;
       const resp = (state.run.responses && state.run.responses[d.id]) || {};
       d.items.forEach(item => {
@@ -1240,7 +1461,7 @@
   function renderReport(){
     const rec = state.viewingRecord;
     const dateStr = new Date(rec.dateISO).toLocaleDateString(undefined,{ day:"numeric", month:"long", year:"numeric" });
-    const rows = DOMAINS.map(d=>{
+    const rows = domainsFor(yearGroupFromClassroom(rec.classroom)).map(d=>{
       const r = rec.domainResults[d.id];
       const pct = r.pct===null ? 0 : r.pct;
       const note = rec.domainNotes && rec.domainNotes[d.id];
@@ -1260,7 +1481,7 @@
       <div class="print-only" style="margin-bottom:14px;"><b style="font-family:'Fraunces';font-size:1.3rem;">Early Years Baseline</b> — Markham College EYFS &amp; EAL check-in report</div>
       <div class="report-head">
         <div>
-          <span class="eyebrow">Baseline report</span>
+          <span class="eyebrow">${esc(yearGroupFromClassroom(rec.classroom))} baseline report</span>
           <h1 style="font-size:1.6rem;margin-top:4px;">${esc(rec.name)}</h1>
           <p class="hero-sub" style="margin-top:4px;">Class ${esc(rec.classroom||"—")} &middot; Age ${esc(rec.age||"—")} &middot; ${esc(rec.homeLanguage||"EAL not specified")} &middot; ${dateStr} &middot; Assessor: ${esc(rec.assessor||"—")}</p>
         </div>
@@ -1298,12 +1519,12 @@
   /* ============================== CSV EXPORT ============================== */
   function buildCSV(){
     const header = ["Name","Classroom","Age","Home language","Assessor","Date",
-      ...DOMAINS.flatMap(d=>[d.name+" %", d.name+" band"]),
+      ...ALL_DOMAINS_UNION.flatMap(d=>[d.name+" %", d.name+" band"]),
       "Overall %","Overall band","Handedness","Pencil grip","Posture","Overall comment"];
     const lines = [header];
     getVisibleRoster().forEach(rec=>{
       const row = [rec.name, rec.classroom||"", rec.age||"", rec.homeLanguage||"", rec.assessor||"", rec.dateISO ? rec.dateISO.slice(0,10) : ""];
-      DOMAINS.forEach(d=>{
+      ALL_DOMAINS_UNION.forEach(d=>{
         const r = rec.domainResults && rec.domainResults[d.id];
         row.push(r && r.pct!==null ? r.pct : "", r ? r.band : "");
       });
@@ -1429,7 +1650,7 @@
         break;
       }
       case "continue-from-notes": saveDomainNoteFromDOM(domain.id); advanceDomain(); break;
-      case "back-to-last-notes": saveOverallCommentFromDOM(); state.run.domainIdx = DOMAINS.length-1; state.run.phase = "notes"; render(); break;
+      case "back-to-last-notes": saveOverallCommentFromDOM(); state.run.domainIdx = domainsFor(state.run.yearGroup).length-1; state.run.phase = "notes"; render(); break;
       case "finish-overall": saveOverallCommentFromDOM(); finishAssessment(); break;
       case "pick-chip": {
         saveOverallCommentFromDOM();
@@ -1519,7 +1740,7 @@
       classroom: getActiveClassroom()
     };
     if(state.child.assessor) setLastAssessorName(state.child.assessor);
-    state.run = { domainIdx:0, itemIdx:0, phase:"intro", responses:{}, grid:{}, orderTemp:[], notes:{}, overallComment:"", handedness:"", pencilGrip:"", posture:"", startedAt:Date.now(), _feedback:null };
+    state.run = { domainIdx:0, itemIdx:0, phase:"intro", responses:{}, grid:{}, orderTemp:[], notes:{}, overallComment:"", handedness:"", pencilGrip:"", posture:"", startedAt:Date.now(), _feedback:null, yearGroup: yearGroupFromClassroom(state.child.classroom) };
     state.view = "assessment";
     render();
   }
