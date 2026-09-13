@@ -199,6 +199,7 @@
   .say-block{ background:var(--paper-sunk); border-left:3px solid var(--accent); border-radius:0 10px 10px 0; padding:12px 15px; margin:14px 0; font-size:.98rem; line-height:1.55; }
   .say-block b{ color:var(--accent-strong); }
   .materials-line{ display:flex; gap:8px; align-items:center; font-size:.86rem; color:var(--ink-soft); margin-top:10px; }
+  .materials-line svg{ flex:none; width:19px; height:19px; color:var(--accent-2); }
 
   /* ---------- item stage ---------- */
   .prompt{ font-family:"Figtree"; font-weight:700; font-size:1.28rem; line-height:1.4; margin-bottom:18px; }
@@ -381,6 +382,13 @@
 
   function countGroup(emoji,n){
     return `<div class="count-group">${Array.from({length:n}).map(()=>`<span>${emoji}</span>`).join("")}</div>`;
+  }
+
+  function optPhoto(src, alt){
+    return `<img src="${esc(src)}" alt="${esc(alt)}" style="width:84px;height:84px;object-fit:cover;border-radius:12px;">`;
+  }
+  function cardPhoto(src, alt){
+    return `<img src="${esc(src)}" alt="${esc(alt)}" style="width:64px;height:64px;object-fit:cover;border-radius:10px;display:block;margin:0 auto 8px;">`;
   }
 
   function dotSwatch(size,color){
@@ -581,9 +589,13 @@
       say:"Mix the pictures up (they already are). Ask the child to tap them in the order the story happens.",
       materials:"No extra materials needed.",
       items:[
-        { id:"st1", type:"order", say:"Put these pictures in order: what happens first, then next?",
-          cards:[{key:"school",emoji:"🎒",label:"Go to school"},{key:"wake",emoji:"🛏️",label:"Wake up"}],
-          correctOrder:["wake","school"] }
+        { id:"st1", type:"order", say:"Put these pictures in order: what happens first, next, and last?",
+          cards:[
+            {key:"wake",emoji:cardPhoto("wake%20up.jpg","Wake up"),label:"Wake up"},
+            {key:"breakfast",emoji:cardPhoto("eat%20breakfast.jpg","Eat breakfast"),label:"Eat breakfast"},
+            {key:"school",emoji:cardPhoto("go%20to%20school.jpg","Go to school"),label:"Go to school"}
+          ],
+          correctOrder:["wake","breakfast","school"] }
       ]
     },
     {
@@ -604,9 +616,9 @@
       say:"Say each word clearly yourself — no letters are shown, this checks listening skills, not reading.",
       materials:"No extra materials needed.",
       items:[
-        { id:"ph1", type:"select", say:"Which word sounds similar to “cat” — this one, or this one?", options:[{label:"🎩",correct:true},{label:"☀️"}] },
-        { id:"ph2", type:"select", say:"Say “cat” and “banana” — which one has more parts when we clap it?", options:[{label:"🐱"},{label:"🍌",correct:true}] },
-        { id:"ph3", type:"select", say:"Does “sun” start with the same sound as this, or this?", options:[{label:"🧦",correct:true},{label:"🐱"}] }
+        { id:"ph1", type:"select", say:"Which word sounds similar to “cat” — this one, or this one?", options:[{label:optPhoto("hat.jpg","hat"),correct:true},{label:optPhoto("sun.jpg","sun")}] },
+        { id:"ph2", type:"select", say:"Say “cat” and “banana” — which one has more parts when we clap it?", options:[{label:optPhoto("cat.png","cat")},{label:optPhoto("bananas.jpg","bananas"),correct:true}] },
+        { id:"ph3", type:"select", say:"Does “sun” start with the same sound as this, or this?", options:[{label:optPhoto("socks.jpg","socks"),correct:true},{label:optPhoto("cat.png","cat")}] }
       ]
     }
   ];
@@ -1249,9 +1261,10 @@
       body = `<div class="order-row" id="orderRow">
         ${item.cards.map(c=>{
           const pos = order.indexOf(c.key);
+          const visual = c.emoji.startsWith("<") ? c.emoji : `<span class="emoji">${c.emoji}</span>`;
           return `<button class="order-card ${pos>=0?'placed':''}" data-act="pick-order" data-key="${c.key}">
             ${pos>=0?`<span class="badge">${pos+1}</span>`:""}
-            <span class="emoji">${c.emoji}</span>${esc(c.label)}
+            ${visual}${esc(c.label)}
           </button>`;
         }).join("")}
       </div><div class="order-hint">Tap the pictures in the order the story happens. <button class="btn-quiet" data-act="reset-order" style="padding:0;">Reset</button></div>`;
@@ -1529,14 +1542,15 @@
   /* ============================== CSV EXPORT ============================== */
   function buildCSV(){
     const header = ["Name","Classroom","Age","Home language","Assessor","Date",
-      ...ALL_DOMAINS_UNION.flatMap(d=>[d.name+" %", d.name+" band"]),
+      ...ALL_DOMAINS_UNION.flatMap(d=>[d.name+" %", d.name+" band", d.name+" notes"]),
       "Overall %","Overall band","Handedness","Pencil grip","Posture","Overall comment"];
     const lines = [header];
     getVisibleRoster().forEach(rec=>{
       const row = [rec.name, rec.classroom||"", rec.age||"", rec.homeLanguage||"", rec.assessor||"", rec.dateISO ? rec.dateISO.slice(0,10) : ""];
       ALL_DOMAINS_UNION.forEach(d=>{
         const r = rec.domainResults && rec.domainResults[d.id];
-        row.push(r && r.pct!==null ? r.pct : "", r ? r.band : "");
+        const note = rec.domainNotes && rec.domainNotes[d.id];
+        row.push(r && r.pct!==null ? r.pct : "", r ? r.band : "", note || "");
       });
       row.push(rec.overallPct!==null && rec.overallPct!==undefined ? rec.overallPct : "");
       row.push(rec.overallBand||"");
