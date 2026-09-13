@@ -214,8 +214,7 @@
   }
   .opt-tile:hover{ border-color:var(--accent-2); }
   .opt-tile .glyph{ font-family:"Fraunces"; font-size:2.3rem; font-weight:600; line-height:1; }
-  .opt-tile.chosen-correct{ border-color:var(--band-meets-line); background:var(--band-meets-bg); color:var(--band-meets-fg); }
-  .opt-tile.chosen-wrong{ border-color:var(--band-developing-line); background:var(--band-developing-bg); color:var(--band-developing-fg); }
+  .opt-tile.chosen{ border-color:var(--band-meets-line); background:var(--band-meets-bg); color:var(--band-meets-fg); }
   .opt-tile.reveal-correct{ border-color:var(--band-meets-line); box-shadow:0 0 0 2px var(--band-meets-line) inset; }
   .opt-tile[disabled], .opt-tile.is-locked{ cursor:default; }
   .opt-mark{ font-size:.78rem; font-weight:800; }
@@ -534,8 +533,8 @@
       items:[
         { id:"n1", type:"select", say:"Can you point to the number 2?", options:[{label:"2",correct:true},{label:"4"},{label:"1"}] },
         { id:"n2", type:"select", say:"Can you point to the number 5?", options:[{label:"5",correct:true},{label:"3"},{label:"2"}] },
-        { id:"n3", type:"observe", say:"Ask the child to write or copy the numbers 1 to 3 on paper.", options:[
-          {label:"Not yet forming numbers",value:0}, {label:"Attempts marks",value:0.5}, {label:"Forms recognisable numbers",value:1}
+        { id:"n3", type:"observe", say:"Ask the child to write the numbers 1 to 5 on paper.", options:[
+          {label:"Not yet forming numbers",value:0}, {label:"Forms some numbers (1–5)",value:0.5}, {label:"Forms numbers 1–10 confidently",value:1}
         ]}
       ]
     },
@@ -605,7 +604,7 @@
       say:"Say each word clearly yourself — no letters are shown, this checks listening skills, not reading.",
       materials:"No extra materials needed.",
       items:[
-        { id:"ph1", type:"select", say:"Does “cat” rhyme with this, or this?", options:[{label:"🎩",correct:true},{label:"☀️"}] },
+        { id:"ph1", type:"select", say:"Which word sounds similar to “cat” — this one, or this one?", options:[{label:"🎩",correct:true},{label:"☀️"}] },
         { id:"ph2", type:"select", say:"Say “cat” and “banana” — which one has more parts when we clap it?", options:[{label:"🐱"},{label:"🍌",correct:true}] },
         { id:"ph3", type:"select", say:"Does “sun” start with the same sound as this, or this?", options:[{label:"🧦",correct:true},{label:"🐱"}] }
       ]
@@ -1234,7 +1233,7 @@
       body = `<div class="option-grid${cols}" id="optGrid">
         ${item.options.map((o,i)=>{
           const content = o.label.startsWith("<") ? o.label : `<span class="glyph">${esc(o.label)}</span>`;
-          const chosen = r && r.idx===i ? (o.correct ? " chosen-correct" : " chosen-wrong") : "";
+          const chosen = r && r.idx===i ? " chosen" : "";
           return `<button class="opt-tile${chosen}" data-act="pick-select" data-idx="${i}">${content}</button>`;
         }).join("")}
       </div>`;
