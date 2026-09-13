@@ -972,10 +972,14 @@
       const elapsed = Math.floor((Date.now()-state.run.startedAt)/1000);
       meta = `<div class="topbar-meta"><span class="timer" id="timerDisplay">${fmtTime(elapsed)}</span><button class="btn-quiet" data-act="save-exit" style="padding:4px 2px;">Save &amp; exit</button><button class="end-link" data-act="end-early">End now</button></div>`;
     }
+    const cls = getActiveClassroom();
+    const subtitle = (!isAdminUnlocked() && cls)
+      ? `Classroom ${esc(cls)} &middot; running the ${esc(yearGroupFromClassroom(cls))} test`
+      : `Markham College &middot; EYFS &amp; EAL check-in`;
     return `<div class="topbar">
       <button class="brand" data-act="go-roster">
         ${ICON.sprout}
-        <span class="brand-text"><b>Early Years Baseline</b><span>Markham College &middot; EYFS &amp; EAL check-in</span></span>
+        <span class="brand-text"><b>Early Years Baseline</b><span>${subtitle}</span></span>
       </button>
       ${extra || meta}
     </div>`;
@@ -1106,10 +1110,13 @@
   /* ============================== SETUP ============================== */
   function renderSetup(){
     const today = new Date().toISOString().slice(0,10);
+    const cls = getActiveClassroom();
+    const yg = yearGroupFromClassroom(cls);
     return `<button class="btn-quiet" data-act="go-roster">&larr; Back to check-ins</button>
       <div class="card" style="margin-top:14px;max-width:640px;">
         <span class="eyebrow">New baseline check-in</span>
         <h1 style="font-size:1.5rem;margin-top:6px;">Before you begin</h1>
+        <div class="identity-bar" style="margin-top:16px;"><span>This will run the <b>${esc(yg)} test</b>, based on classroom <b>${esc(cls)}</b>.</span><button class="btn-quiet" data-act="switch-classroom" style="padding:0;">Wrong class? Switch</button></div>
         <div class="form-grid">
           <div class="field full"><label>Child's name</label><input id="f-name" type="text" placeholder="e.g. Amina K." autofocus></div>
           <div class="field"><label>Age</label><input id="f-age" type="text" value="5" placeholder="5"></div>
@@ -1117,7 +1124,7 @@
           <div class="field full"><label>Home language(s) / EAL notes</label><input id="f-lang" type="text" placeholder="e.g. Polish — 4 months in an English setting"></div>
           <div class="field full"><label>Assessor</label><input id="f-assessor" type="text" placeholder="Your name" value="${esc(getLastAssessorName())}"></div>
         </div>
-        <div class="setup-note">${ICON.info}<div>Takes about <b>10–20 minutes</b> depending on the child's year group, done one-to-one. Have paper and a pencil ready for the writing checks — everything else runs on screen. The right test (FS1, FS2 or Kinder) loads automatically from the classroom you picked earlier. You can end early at any point and still get a report on what was covered.</div></div>
+        <div class="setup-note">${ICON.info}<div>Takes about <b>10–20 minutes</b> depending on the child's year group, done one-to-one. Have paper and a pencil ready for the writing checks — everything else runs on screen. You can end early at any point and still get a report on what was covered.</div></div>
         <div style="margin-top:22px;display:flex;justify-content:flex-end;">
           <button class="btn btn-primary" data-act="begin-assessment">Start assessment</button>
         </div>
@@ -1220,18 +1227,23 @@
 
   function renderItem(domain, item){
     let visual = item.visual ? `<div class="visual-block" style="gap:10px;">${item.visual}</div>` : "";
+    const r = state.run.responses[domain.id] && state.run.responses[domain.id][item.id];
     let body = "";
     if(item.type==="select"){
       const cols = item.options.length===2 ? " opts-2" : "";
       body = `<div class="option-grid${cols}" id="optGrid">
         ${item.options.map((o,i)=>{
           const content = o.label.startsWith("<") ? o.label : `<span class="glyph">${esc(o.label)}</span>`;
-          return `<button class="opt-tile" data-act="pick-select" data-idx="${i}">${content}</button>`;
+          const chosen = r && r.idx===i ? (o.correct ? " chosen-correct" : " chosen-wrong") : "";
+          return `<button class="opt-tile${chosen}" data-act="pick-select" data-idx="${i}">${content}</button>`;
         }).join("")}
       </div>`;
     } else if(item.type==="observe"){
       body = `<div class="rate-grid" id="rateGrid">
-        ${item.options.map((o,i)=>`<button class="rate-opt" data-act="pick-observe" data-idx="${i}"><span>${esc(o.label)}</span></button>`).join("")}
+        ${item.options.map((o,i)=>{
+          const chosen = r && r.idx===i ? " chosen" : "";
+          return `<button class="rate-opt${chosen}" data-act="pick-observe" data-idx="${i}"><span>${esc(o.label)}</span></button>`;
+        }).join("")}
       </div>`;
     } else if(item.type==="order"){
       const order = state.run.orderTemp || [];
@@ -1245,7 +1257,6 @@
         }).join("")}
       </div><div class="order-hint">Tap the pictures in the order the story happens. <button class="btn-quiet" data-act="reset-order" style="padding:0;">Reset</button></div>`;
     }
-    const r = state.run.responses[domain.id] && state.run.responses[domain.id][item.id];
     const answered = !!(r && (r.correct !== undefined || r.value !== undefined || r.score !== undefined));
     const showEvidence = item.type==="observe" || item.type==="order";
     return `<div class="card">
@@ -1291,7 +1302,7 @@
   function recordSelect(domain, item, idx){
     const opt = item.options[idx];
     state.run.responses[domain.id] = state.run.responses[domain.id] || {};
-    state.run.responses[domain.id][item.id] = { correct: !!opt.correct };
+    state.run.responses[domain.id][item.id] = { correct: !!opt.correct, idx };
     state.run._feedback = opt.correct ? { ok:true, text:"Marked correct." } : { ok:false, text:"Marked not yet — moving on." };
     render();
   }
@@ -1299,7 +1310,7 @@
     const opt = item.options[idx];
     state.run.responses[domain.id] = state.run.responses[domain.id] || {};
     const existing = state.run.responses[domain.id][item.id] || {};
-    state.run.responses[domain.id][item.id] = Object.assign({}, existing, { value: opt.value });
+    state.run.responses[domain.id][item.id] = Object.assign({}, existing, { value: opt.value, idx });
     state.run._feedback = { ok:true, text:"Recorded." };
     render();
   }
