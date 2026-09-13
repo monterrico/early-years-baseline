@@ -630,10 +630,17 @@
       say:"Show two or three number cards (or point along a number line). Ask the child to point to the number you say.",
       materials:"Number cards or a number line, plus paper &amp; pencil for the formation check.",
       items:[
-        { id:"n1", type:"select", say:"Can you point to the number 8?", options:[{label:"8",correct:true},{label:"3"},{label:"6"}] },
-        { id:"n2", type:"select", say:"Can you point to the number 14?", options:[{label:"14",correct:true},{label:"41"},{label:"4"}] },
-        { id:"n3", type:"select", say:"Can you point to the number 20?", options:[{label:"20",correct:true},{label:"12"},{label:"2"}] },
-        { id:"n4", type:"observe", say:"Ask the child to write the numbers 1 to 5 on paper.", options:[
+        { id:"n1", type:"select", say:"Can you point to the number 2?", options:[{label:"2",correct:true},{label:"5"},{label:"1"}] },
+        { id:"n2", type:"select", say:"Can you point to the number 5?", options:[{label:"5",correct:true},{label:"8"},{label:"3"}] },
+        { id:"n3", type:"select", say:"Can you point to the number 6?", options:[{label:"6",correct:true},{label:"9"},{label:"2"}] },
+        { id:"n4", type:"select", say:"Can you point to the number 8?", options:[{label:"8",correct:true},{label:"3"},{label:"6"}] },
+        { id:"n5", type:"select", say:"Can you point to the number 9?", options:[{label:"9",correct:true},{label:"4"},{label:"7"}] },
+        { id:"n6", type:"select", say:"Can you point to the number 10?", options:[{label:"10",correct:true},{label:"6"},{label:"1"}] },
+        { id:"n7", type:"select", say:"Can you point to the number 12?", options:[{label:"12",correct:true},{label:"21"},{label:"2"}] },
+        { id:"n8", type:"select", say:"Can you point to the number 14?", options:[{label:"14",correct:true},{label:"41"},{label:"4"}] },
+        { id:"n9", type:"select", say:"Can you point to the number 17?", options:[{label:"17",correct:true},{label:"71"},{label:"7"}] },
+        { id:"n10", type:"select", say:"Can you point to the number 20?", options:[{label:"20",correct:true},{label:"12"},{label:"2"}] },
+        { id:"n11", type:"observe", say:"Ask the child to write the numbers 1 to 5 on paper.", options:[
           {label:"Not yet forming numbers",value:0}, {label:"Forms some numbers (1–5)",value:0.5}, {label:"Forms numbers 1–10 confidently",value:1}
         ]}
       ]
@@ -697,9 +704,14 @@
         { id:"st1", type:"order", say:"Put these pictures in order: a plant growing.",
           cards:[{key:"bud",emoji:"🌿",label:"Bud"},{key:"sprout",emoji:"🌱",label:"Sprout"},{key:"flower",emoji:"🌻",label:"Flower"},{key:"seed",emoji:"🌰",label:"Seed"}],
           correctOrder:["seed","sprout","bud","flower"] },
-        { id:"st2", type:"order", say:"Put these pictures in order: getting ready for school.",
-          cards:[{key:"teeth",emoji:"🪥",label:"Brush teeth"},{key:"school",emoji:"🎒",label:"Go to school"},{key:"wake",emoji:"🛏️",label:"Wake up"},{key:"dressed",emoji:"👕",label:"Get dressed"}],
-          correctOrder:["wake","dressed","teeth","school"] }
+        { id:"st2", type:"order", say:"Put these pictures in order: a day at school.",
+          cards:[
+            {key:"wake",emoji:cardPhoto("wake%20up.jpg","Wake up"),label:"Wake up"},
+            {key:"breakfast",emoji:cardPhoto("eat%20breakfast.jpg","Eat breakfast"),label:"Eat breakfast"},
+            {key:"school",emoji:cardPhoto("go%20to%20school.jpg","Go to school"),label:"Go to school"},
+            {key:"lunch",emoji:cardPhoto("eat%20lunch.jpg","Eat lunch"),label:"Eat lunch"}
+          ],
+          correctOrder:["wake","breakfast","school","lunch"] }
       ]
     },
     {
@@ -711,7 +723,9 @@
         { id:"l2", type:"select", say:"Can you point to the letter m?", options:[{label:"w"},{label:"n"},{label:"m",correct:true}] },
         { id:"l3", type:"select", say:"Can you point to the letter b?", options:[{label:"d"},{label:"b",correct:true},{label:"p"}] },
         { id:"l4", type:"select", say:"Can you point to the word “cat”?", options:[{label:"cat",correct:true},{label:"dog"},{label:"sun"}] },
-        { id:"l5", type:"observe", say:"Ask the child to write their own name.", options:[
+        { id:"l5", type:"select", say:"Can you point to the word “dog”?", options:[{label:"dog",correct:true},{label:"cat"},{label:"sun"}] },
+        { id:"l6", type:"select", say:"Can you point to the word “run”?", options:[{label:"run",correct:true},{label:"sun"},{label:"cat"}] },
+        { id:"l7", type:"observe", say:"Ask the child to write their own name.", options:[
           {label:"Not yet attempting",value:0}, {label:"Attempts some letters",value:0.5}, {label:"Writes it confidently",value:1}
         ]}
       ]
